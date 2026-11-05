@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#0a2230"/>
+      <stop offset="100%" stop-color="#040b16"/>
+    </radialGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2cc7c4" stop-opacity="0.55"/>
+      <stop offset="35%" stop-color="#3b82f6" stop-opacity="0.25"/>
+      <stop offset="70%" stop-color="#a78bfa" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#2cc7c4" stop-opacity="0.5"/>
+    </linearGradient>
+    <pattern id="dies" width="52" height="42" patternUnits="userSpaceOnUse">
+      <rect x="3" y="3" width="46" height="36" rx="3" fill="none" stroke="#cffafe" stroke-opacity="0.22"/>
+    </pattern>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cd9d6" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#5cd9d6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <ellipse cx="800" cy="450" rx="520" ry="520" fill="url(#glow)"/>
+
+  <circle cx="800" cy="450" r="360" fill="#0b2231" stroke="#5cd9d6" stroke-opacity="0.45" stroke-width="3"/>
+  <circle cx="800" cy="450" r="352" fill="url(#dies)"/>
+  <circle cx="800" cy="450" r="352" fill="url(#sheen)" opacity="0.5"/>
+  <circle cx="800" cy="450" r="300" fill="none" stroke="#0b2231" stroke-opacity="0.35" stroke-width="1"/>
+  <circle cx="800" cy="450" r="225" fill="none" stroke="#0b2231" stroke-opacity="0.30" stroke-width="1"/>
+  <circle cx="800" cy="450" r="150" fill="none" stroke="#0b2231" stroke-opacity="0.25" stroke-width="1"/>
+
+  <!-- flat / notch -->
+  <path d="M470 620a360 360 0 0 0 660 0" fill="none" stroke="#0b2231" stroke-width="10" opacity="0.5"/>
+  <rect x="760" y="795" width="80" height="16" rx="4" fill="#5cd9d6" fill-opacity="0.35"/>
+
+  <g font-family="monospace" font-size="16" fill="#99eae6" fill-opacity="0.55" letter-spacing="5">
+    <text x="90" y="110">300 mm WAFER · SHUTTLE RUN 2026</text>
+    <text x="90" y="140">22 nm FDX · 214 RETICLES</text>
+  </g>
+  <g stroke="#5cd9d6" stroke-opacity="0.35" stroke-width="1.5" fill="none">
+    <path d="M1240 300h180v-60"/><path d="M1240 420h130v90"/><path d="M1240 600h200v70"/>
+    <path d="M360 300h-180v-60"/><path d="M360 620h-160v60"/>
+  </g>
+</svg>

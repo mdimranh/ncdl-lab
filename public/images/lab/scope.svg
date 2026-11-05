@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#03181a"/>
+      <stop offset="100%" stop-color="#030b12"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#5cd9d6" stroke-opacity="0.14" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="trace" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2cc7c4" stop-opacity="0.35"/>
+      <stop offset="50%" stop-color="#5cd9d6" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#2cc7c4" stop-opacity="0.35"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <g stroke="#5cd9d6" stroke-opacity="0.22" stroke-width="1">
+    <path d="M0 450h1600"/><path d="M0 250h1600" stroke-opacity="0.12"/><path d="M0 650h1600" stroke-opacity="0.12"/>
+  </g>
+
+  <!-- neuron trace: leaky integrate and fire -->
+  <path d="M80 520 L200 520 Q230 520 240 480 L280 320 Q292 280 320 320 L360 520 Q372 560 400 520 L430 470 Q450 430 470 470 L500 520 Q520 520 540 520 L560 268 L566 520 L610 520 Q640 520 655 470 L700 340 Q715 300 735 340 L775 520 Q790 555 815 522 L860 470 Q880 428 900 470 L935 522 Q960 522 980 520 L1000 250 L1006 520 L1060 520 Q1090 520 1105 460 L1145 350 Q1160 312 1180 350 L1215 520 Q1230 556 1260 520 L1300 480 Q1325 440 1348 480 L1385 520 L1520 520"/>
+  <path d="M80 520 L200 520 Q230 520 240 480 L280 320 Q292 280 320 320 L360 520 Q372 560 400 520 L430 470 Q450 430 470 470 L500 520 Q520 520 540 520 L560 268 L566 520 L610 520 Q640 520 655 470 L700 340 Q715 300 735 340 L775 520 Q790 555 815 522 L860 470 Q880 428 900 470 L935 522 Q960 522 980 520 L1000 250 L1006 520 L1060 520 Q1090 520 1105 460 L1145 350 Q1160 312 1180 350 L1215 520 Q1230 556 1260 520 L1300 480 Q1325 440 1348 480 L1385 520 L1520 520" fill="none" stroke="url(#trace)" stroke-width="4" stroke-linejoin="round"/>
+
+  <!-- spikes -->
+  <g stroke="#cffafe" stroke-width="2" stroke-opacity="0.85">
+    <path d="M560 268V180"/><path d="M1000 250V160"/><path d="M280 320V250"/>
+    <path d="M735 340V272"/><path d="M1145 350V286"/>
+  </g>
+  <g fill="#cffafe" fill-opacity="0.9" font-family="monospace" font-size="14">
+    <circle cx="560" cy="172" r="5"/><circle cx="1000" cy="152" r="5"/><circle cx="280" cy="242" r="5"/>
+    <circle cx="735" cy="264" r="5"/><circle cx="1145" cy="278" r="5"/>
+  </g>
+
+  <g font-family="monospace" font-size="16" fill="#99eae6" fill-opacity="0.55" letter-spacing="4">
+    <text x="80" y="120">ON-WAFER MEASUREMENT · 67 GHz PROBE STATION</text>
+    <text x="80" y="790">NEURON MEMBRANE POTENTIAL · LIF DYNAMICS</text>
+    <text x="80" y="820">CH1 200 mV/div · 20 µs/div · 25 °C</text>
+  </g>
+  <g font-family="monospace" font-size="14" fill="#5cd9d6" fill-opacity="0.6">
+    <text x="1440" y="790">NCDL BENCH B</text>
+    <text x="1440" y="814">CAL: SOLT</text>
+  </g>
+</svg>
