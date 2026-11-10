@@ -5,7 +5,7 @@ import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { positions } from "@/db/schema";
 import { getSettings } from "@/lib/content";
-import { getDictionary } from "@/lib/i18n";
+import { getDictionary, localized } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { formatDate } from "@/lib/utils";
 import { Eyebrow, Tag } from "@/components/site/section";
@@ -36,7 +36,7 @@ export default async function ContactPage() {
     {
       icon: MapPin,
       label: dict.contact.address,
-      value: settings.address,
+      value: localized(locale, settings.address, settings.addressKo),
       href: undefined,
     },
     {
@@ -124,7 +124,9 @@ export default async function ContactPage() {
                   <Clock className="h-3.5 w-3.5" />
                   {dict.contact.hours}
                 </p>
-                <p className="mt-2 text-[13px] text-ink-900">{settings.officeHours}</p>
+                <p className="mt-2 text-[13px] text-ink-900">
+                  {localized(locale, settings.officeHours, settings.officeHoursKo)}
+                </p>
               </div>
 
               <div className="border border-line bg-white p-6">
@@ -133,7 +135,7 @@ export default async function ContactPage() {
                   {dict.contact.gettingHere}
                 </p>
                 <p className="mt-2 text-[12.5px] leading-relaxed text-muted">
-                  {settings.address}
+                  {localized(locale, settings.address, settings.addressKo)}
                 </p>
               </div>
 
@@ -176,10 +178,10 @@ export default async function ContactPage() {
                     )}
                   </div>
                   <p className="mt-2 text-[14px] font-medium text-ink-900">
-                    {position.title}
+                    {localized(locale, position.title, position.titleKo)}
                   </p>
                   <p className="mt-1 max-w-2xl text-[12.5px] leading-relaxed text-muted">
-                    {position.description}
+                    {localized(locale, position.description, position.descriptionKo)}
                   </p>
                 </div>
                 {settings.email && (

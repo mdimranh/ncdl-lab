@@ -15,7 +15,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
     <div className="flex min-h-full flex-col">
       <SiteHeader shortName={settings.shortName} locale={locale} dict={dict} />
       <main className="flex-1">{children}</main>
-      <SiteFooter settings={settings} dict={dict} />
+      <SiteFooter settings={settings} locale={locale} dict={dict} />
     </div>
   );
 }

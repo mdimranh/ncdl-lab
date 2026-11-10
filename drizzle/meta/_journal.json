@@ -22,6 +22,20 @@
       "when": 1794327363923,
       "tag": "0002_true_colossus",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794328112716,
+      "tag": "0003_tough_the_call",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794328844294,
+      "tag": "0004_furry_flatman",
+      "breakpoints": true
     }
   ]
 }

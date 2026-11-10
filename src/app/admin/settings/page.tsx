@@ -40,11 +40,17 @@ export default async function AdminSettingsPage({
             <Field label="Laboratory name">
               <Input name="labName" defaultValue={settings.labName} />
             </Field>
+            <Field label="Laboratory name (Korean)">
+              <Input name="labNameKo" defaultValue={settings.labNameKo} />
+            </Field>
             <Field label="Short name" hint="Used in the header, footer and admin.">
               <Input name="shortName" defaultValue={settings.shortName} />
             </Field>
             <Field label="Institution / department">
               <Input name="institution" defaultValue={settings.institution} />
+            </Field>
+            <Field label="Institution / department (Korean)">
+              <Input name="institutionKo" defaultValue={settings.institutionKo} />
             </Field>
             <Field label="Founding year">
               <Input type="number" name="foundingYear" defaultValue={settings.foundingYear} min={1900} max={2100} />
@@ -55,12 +61,24 @@ export default async function AdminSettingsPage({
             <Textarea name="tagline" defaultValue={settings.tagline} className="min-h-[72px]" />
           </Field>
 
+          <Field label="Tagline (Korean)" hint="Leave empty to fall back to English.">
+            <Textarea name="taglineKo" defaultValue={settings.taglineKo} className="min-h-[72px]" />
+          </Field>
+
           <Field label="Motto" hint="Short statement shown on the home page and login screen.">
             <Input name="motto" defaultValue={settings.motto} />
           </Field>
 
+          <Field label="Motto (Korean)">
+            <Input name="mottoKo" defaultValue={settings.mottoKo} />
+          </Field>
+
           <Field label="Mission" hint="Separate paragraphs with a blank line.">
             <Textarea name="mission" defaultValue={settings.mission} className="min-h-[180px]" />
+          </Field>
+
+          <Field label="Mission (Korean)" hint="Leave empty to fall back to English.">
+            <Textarea name="missionKo" defaultValue={settings.missionKo} className="min-h-[180px]" />
           </Field>
         </Card>
 
@@ -71,6 +89,10 @@ export default async function AdminSettingsPage({
 
           <Field label="Address">
             <Textarea name="address" defaultValue={settings.address} className="min-h-[72px]" />
+          </Field>
+
+          <Field label="Address (Korean)">
+            <Textarea name="addressKo" defaultValue={settings.addressKo} className="min-h-[72px]" />
           </Field>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -85,6 +107,9 @@ export default async function AdminSettingsPage({
             </Field>
             <Field label="Office hours">
               <Input name="officeHours" defaultValue={settings.officeHours} />
+            </Field>
+            <Field label="Office hours (Korean)">
+              <Input name="officeHoursKo" defaultValue={settings.officeHoursKo} />
             </Field>
           </div>
 

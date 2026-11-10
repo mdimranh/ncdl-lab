@@ -195,13 +195,13 @@ export default async function MemberPage({
               <div className="flex items-start justify-between gap-4 py-3">
                 <dt className="text-muted">{dict.members.profile.department}</dt>
                 <dd className="max-w-[60%] text-right text-ink-800">
-                  {settings.institution}
+                  {localized(locale, settings.institution, settings.institutionKo)}
                 </dd>
               </div>
               <div className="flex items-start justify-between gap-4 py-3">
                 <dt className="text-muted">{dict.members.profile.building}</dt>
                 <dd className="max-w-[60%] text-right text-ink-800">
-                  {settings.address}
+                  {localized(locale, settings.address, settings.addressKo)}
                 </dd>
               </div>
               <div className="flex items-start justify-between gap-4 py-3">

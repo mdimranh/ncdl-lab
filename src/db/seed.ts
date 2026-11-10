@@ -14,7 +14,14 @@ import {
   users,
 } from "./schema";
 import { hashPassword } from "../lib/password";
-import { areaKorean, memberKorean, newsKorean } from "./seed-ko";
+import {
+  areaKorean,
+  memberKorean,
+  newsKorean,
+  positionKorean,
+  publicationKorean,
+  settingsKorean,
+} from "./seed-ko";
 
 if (existsSync(".env")) {
   process.loadEnvFile(".env");
@@ -233,6 +240,8 @@ async function main() {
     githubUrl: "https://github.com/",
     youtubeUrl: "https://www.youtube.com/",
   });
+
+  await db.update(siteSettings).set(settingsKorean).where(eq(siteSettings.id, 1));
 
   await db.insert(users).values([
     {
@@ -909,6 +918,10 @@ async function main() {
     },
   ]);
 
+  for (const [title, patch] of Object.entries(publicationKorean)) {
+    await db.update(publications).set(patch).where(eq(publications.title, title));
+  }
+
   // Certificate artwork for the publications gallery.
   await db
     .update(publications)
@@ -1084,6 +1097,10 @@ async function main() {
       displayOrder: 5,
     },
   ]);
+
+  for (const [title, patch] of Object.entries(positionKorean)) {
+    await db.update(positions).set(patch).where(eq(positions.title, title));
+  }
 
   await db.insert(gallery).values([
     {

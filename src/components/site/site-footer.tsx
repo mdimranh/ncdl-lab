@@ -2,13 +2,15 @@ import Link from "next/link";
 import { Mail, MapPin, Phone, Printer } from "lucide-react";
 import { LogoMark } from "./logo-mark";
 import type { SiteSettings } from "@/db/schema";
-import type { Dictionary } from "@/lib/i18n";
+import { localized, type Dictionary, type Locale } from "@/lib/i18n";
 
 export function SiteFooter({
   settings,
+  locale,
   dict,
 }: {
   settings: SiteSettings;
+  locale: Locale;
   dict: Dictionary;
 }) {
   const year = new Date().getFullYear();
@@ -33,12 +35,13 @@ export function SiteFooter({
                   {settings.shortName}
                 </p>
                 <p className="text-[10px] uppercase tracking-[0.16em] text-white/45">
-                  {settings.institution || "Electrical & Electronic Engineering"}
+                  {localized(locale, settings.institution, settings.institutionKo) ||
+                    "Electrical & Electronic Engineering"}
                 </p>
               </div>
             </div>
             <p className="mt-5 max-w-xs text-[13px] leading-relaxed text-white/55">
-              {settings.tagline}
+              {localized(locale, settings.tagline, settings.taglineKo)}
             </p>
           </div>
 
@@ -80,7 +83,9 @@ export function SiteFooter({
             <ul className="mt-4 space-y-3 text-[13px]">
               <li className="flex gap-2.5">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" />
-                <span className="leading-relaxed">{settings.address || "Campus address"}</span>
+                <span className="leading-relaxed">
+                  {localized(locale, settings.address, settings.addressKo) || "Campus address"}
+                </span>
               </li>
               {settings.phone && (
                 <li className="flex gap-2.5">
@@ -113,7 +118,7 @@ export function SiteFooter({
 
         <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-[11.5px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {year} {settings.labName}. {dict.footer.rights}
+            © {year} {localized(locale, settings.labName, settings.labNameKo)}. {dict.footer.rights}
           </p>
           <div className="flex items-center gap-5">
             <span className="font-mono uppercase tracking-[0.14em]">

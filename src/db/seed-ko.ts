@@ -249,3 +249,189 @@ export const newsKorean: Record<string, NewsKorean> = {
       "NCDL과 imec이 연구 협력을 3년 더 연장했습니다. 이 협약으로 연구실은 첨단 CMOS 셔틀 런과 시냅스 특성 분석용 멤리스터 소자 스택에 접근할 수 있게 되었습니다.\n\n이번 연장으로 두 개의 공동 박사 과정이 신설되며, 한 명은 루벤에, 한 명은 다카에 기반을 두고 각 사이트에서 최소 6개월씩 연구합니다.",
   },
 };
+
+export const settingsKorean = {
+  labNameKo: "뉴로모픽 칩 설계 연구실",
+  institutionKo: "전기·전자공학과",
+  taglineKo: "차세대 지능형 기계를 위한 뇌 모방 실리콘.",
+  mottoKo: "뇌에서 배우고, 실리콘으로 구현한다.",
+  missionKo:
+    "NCDL은 생물학적 뇌의 연산 방식과 기계가 만들어지는 방식 사이의 간극을 좁히기 위해 존재합니다. 우리는 동전 전지 하나로 몇 달을 동작해야 하는 기기에 이벤트 기반의 에너지 비례 지능을 부여하는 맞춤형 집적회로, RF 프런트엔드, FPGA 시스템을 설계하며, 아이디어를 화이트보드에서 측정된 실리콘 다이까지 끌고 갈 수 있는 차세대 엔지니어를 양성합니다.",
+  addressKo:
+    "방글라데시 다카 1207, 대학 캠퍼스, 전기·전자공학과, 학술관 B동 402호",
+  officeHoursKo: "일요일 – 목요일 · 09:00 – 17:00 (GMT+6)",
+};
+
+/** Keyed by the English position title. */
+export const positionKorean: Record<
+  string,
+  { titleKo: string; descriptionKo: string }
+> = {
+  "PhD position — Spiking accelerator architecture": {
+    titleKo: "박사과정 — 스파이킹 가속기 아키텍처",
+    descriptionKo:
+      "차세대 이벤트 기반 추론 패브릭을 설계하고 테이프아웃하며, 확장 가능한 라우팅과 온칩 학습 지원에 집중합니다.",
+  },
+  "PhD position — Analog front-ends for neural interfaces": {
+    titleKo: "박사과정 — 신경 인터페이스용 아날로그 프런트엔드",
+    descriptionKo:
+      "10µW 이하 기록 프런트엔드와 데이터 변환기를 회로도부터 22nm 셔틀 런의 측정 실리콘까지 개발합니다.",
+  },
+  "Research Assistant — FPGA vision pipelines": {
+    titleKo: "연구조교 — FPGA 비전 파이프라인",
+    descriptionKo:
+      "산업 검사 파트너를 위한 스트리밍 영상 처리 파이프라인을 RTL 라이브러리 팀과 함께 구축하고 검증합니다.",
+  },
+  "MSc thesis projects — rolling intake": {
+    titleKo: "석사 학위 논문 주제 — 상시 모집",
+    descriptionKo:
+      "네 가지 연구 분야 전반에서 석사 논문을 지도합니다. 현재 주제로는 드리프트 인지 학습 회로, 이벤트 기반 레이더, GaN 모터 드라이브가 있습니다.",
+  },
+  "Summer internship — silicon bring-up": {
+    titleKo: "여름 인턴십 — 실리콘 브링업",
+    descriptionKo:
+      "차기 테스트 칩의 브링업과 특성 분석을 지원하는 12주 유급 인턴십입니다.",
+  },
+};
+
+type PublicationKorean = {
+  titleKo: string;
+  venueKo: string;
+  abstractKo: string;
+};
+
+/** Keyed by the English title, which is unique in the archive. */
+export const publicationKorean: Record<string, PublicationKorean> = {
+  "A 16-Core Event-Driven Accelerator with Hierarchical Address-Event Routing": {
+    titleKo: "계층형 주소 이벤트 라우팅을 갖춘 16코어 이벤트 기반 가속기",
+    venueKo: "IEEE 고체회로 저널",
+    abstractKo:
+      "28nm 스파이킹 가속기로 47mW에서 초당 1.1×10⁹ 시냅스 이벤트를 처리하며, 전역 중재 없이 혼잡을 제한하는 계층형 라우터를 갖춥니다.",
+  },
+  "Drift-Compensated Weight Refresh for HfO₂ Memristive Synapse Arrays": {
+    titleKo: "HfO₂ 멤리스터 시냅스 배열을 위한 드리프트 보상 가중치 리프레시",
+    venueKo: "IEEE 전자소자 논문지",
+    abstractKo:
+      "10⁶회 가중치 갱신 동안 분류 정확도를 1.4% 이내로 유지하는 소형 드리프트 모델과 리프레시 스케줄을 제안합니다.",
+  },
+  "A 4.2 dB NF 60 GHz Current-Reuse LNA in 22 nm FDSOI": {
+    titleKo: "22nm FDSOI 공정의 4.2dB 잡음지수 60GHz 전류 재사용 저잡음 증폭기",
+    venueKo: "IEEE 마이크로파 이론 및 기법 논문지",
+    abstractKo:
+      "18mW에서 4.2dB 잡음지수와 19.6dB 이득을 달성하고 67GHz까지 온웨이퍼로 측정한 전류 재사용 캐스코드 저잡음 증폭기입니다.",
+  },
+  "Event-Triggered Radar Sensing for Always-On Edge Perception": {
+    titleKo: "상시 동작 엣지 인지를 위한 이벤트 트리거 레이더 센싱",
+    venueKo: "IEEE 센서 논문지",
+    abstractKo:
+      "변화 기반 샘플링이 검출 재현율 손실 없이 레이더 프런트엔드 듀티 사이클을 87% 줄임을 보입니다.",
+  },
+  "Streaming Segmentation on FPGA with Bounded Worst-Case Latency": {
+    titleKo: "최악 조건 지연이 보장되는 FPGA 스트리밍 영상 분할",
+    venueKo: "IEEE 회로 및 시스템 비디오 기술 논문지",
+    abstractKo:
+      "Zynq-7020에서 3.8ms 최악 조건 지연과 2.4W 보드 전력을 달성한 완전 스트리밍 분할 파이프라인입니다.",
+  },
+  "Sub-10 µW Chopper-Stabilised Front-End for 64-Channel Neural Recording": {
+    titleKo: "64채널 신경 기록용 10µW 이하 초퍼 안정화 프런트엔드",
+    venueKo: "IEEE 생체의료 회로 및 시스템 논문지",
+    abstractKo:
+      "10kHz 대역에서 1.7µVrms 입력 환산 잡음을 갖는 채널당 9.3µW 기록 프런트엔드입니다.",
+  },
+  "Deterministic 1 kHz Current Control for Spiking Locomotion Policies": {
+    titleKo: "스파이킹 보행 정책을 위한 결정론적 1kHz 전류 제어",
+    venueKo: "IEEE/ASME 메카트로닉스 논문지",
+    abstractKo:
+      "지터로 인한 보행 실패 없이 스파이킹 보행 정책을 실행하는 자체 GaN 드라이버와 실시간 루프를 제시합니다.",
+  },
+  "Compact Modelling of Conductance Drift in Resistive Synapses": {
+    titleKo: "저항성 시냅스의 컨덕턴스 드리프트 소형 모델링",
+    venueKo: "IEEE 나노기술 논문지",
+    abstractKo:
+      "300개 소자와 네 가지 온도에 걸쳐 피팅하고 폐루프 학습 실험으로 검증한 3변수 드리프트 모델입니다.",
+  },
+  "A 1 µs Timestamping Interface for Event Cameras": {
+    titleKo: "이벤트 카메라용 1µs 타임스탬프 인터페이스",
+    venueKo: "IEEE 센서 논문지",
+    abstractKo:
+      "패킷 오버헤드를 62% 줄이면서 이벤트 타이밍을 1µs 이내로 보존하는 인터페이스 ASIC입니다.",
+  },
+  "Hierarchical Address-Event Routing Without Global Arbitration": {
+    titleKo: "전역 중재 없는 계층형 주소 이벤트 라우팅",
+    venueKo: "IEEE 국제 회로 및 시스템 심포지엄 (ISCAS)",
+    abstractKo:
+      "16코어 스파이킹 패브릭에서 최악 조건 이벤트 지연을 제한하는 혼잡 인식 라우터입니다.",
+  },
+  "On-Chip Learning with Drift-Aware Synaptic Refresh": {
+    titleKo: "드리프트 인지 시냅스 리프레시를 이용한 온칩 학습",
+    venueKo: "IEEE 국제 전자소자 학술대회 (IEDM)",
+    abstractKo:
+      "64×64 멤리스터 배열에서 학습 에너지의 3.1%만 사용하는 리프레시 정책으로 인시츄 학습을 시연합니다.",
+  },
+  "Event-Driven Vision Pipeline on a Heterogeneous SoC": {
+    titleKo: "이기종 SoC 상의 이벤트 기반 비전 파이프라인",
+    venueKo: "ACM/SIGDA 국제 FPGA 심포지엄",
+    abstractKo:
+      "이벤트 인터페이스 ASIC과 FPGA 분류기를 결합해 추론당 1.2mJ를 달성했습니다.",
+  },
+  "A 67 GHz Characterisation Methodology for Neuromorphic Radar Front-Ends": {
+    titleKo: "뉴로모픽 레이더 프런트엔드를 위한 67GHz 특성 분석 방법론",
+    venueKo: "유럽 마이크로파 학술대회 (EuMC)",
+    abstractKo:
+      "60GHz에서 온웨이퍼 측정 불확도를 0.15dB로 줄이는 캘리브레이션 및 디임베딩 절차입니다.",
+  },
+  "Hardware-in-the-Loop Validation of Spiking Locomotion Controllers": {
+    titleKo: "스파이킹 보행 제어기의 하드웨어-인-더-루프 검증",
+    venueKo: "IEEE 국제 로보틱스 및 자동화 학술대회 (ICRA)",
+    abstractKo:
+      "12자유도 사족보행 로봇에 배치하기 전 스파이킹 정책에 실제 구동기 지연을 주입하는 테스트베드입니다.",
+  },
+  "Reusable RTL Blocks for Streaming Image Processing": {
+    titleKo: "스트리밍 영상 처리를 위한 재사용 RTL 블록",
+    venueKo: "IEEE 국제 회로 및 시스템 심포지엄 (ISCAS)",
+    abstractKo:
+      "형식적 지연 보장을 갖춘 검증된 스트리밍 비전 블록의 공개 라이브러리입니다.",
+  },
+  "A 12-bit SAR ADC with Correlated Double Sampling for Neural Interfaces": {
+    titleKo: "신경 인터페이스용 상관 이중 샘플링 12비트 SAR ADC",
+    venueKo: "IEEE 아시아 고체회로 학술대회 (A-SSCC)",
+    abstractKo:
+      "오프셋 제거를 위한 상관 이중 샘플링을 갖춘 12비트 250kS/s SAR ADC로 6.8µW를 소모합니다.",
+  },
+  "NCDL-SPARK: A 16-Core Spiking Inference SoC": {
+    titleKo: "NCDL-SPARK: 16코어 스파이킹 추론 SoC",
+    venueKo: "TSMC 28nm 실리콘 검증 · 다이 면적 9.4 mm²",
+    abstractKo:
+      "16세대 테스트 칩: 16개 스파이킹 코어, 4MB 시냅스 SRAM, 계층형 이벤트 라우터, 온칩 활동 카운터. 1.1×10⁹ 이벤트/s에서 47mW.",
+  },
+  "NCDL-ADC12: Low-Power SAR Converter Macro": {
+    titleKo: "NCDL-ADC12: 저전력 SAR 변환기 매크로",
+    venueKo: "GF 22nm FDX 실리콘 검증 · 다이 면적 0.36 mm²",
+    abstractKo:
+      "기준 버퍼를 내장한 12비트 250kS/s SAR ADC 매크로로 총 6.8µW를 소모하며 이후 세 설계에 사용되었습니다.",
+  },
+  "Winter School on Neuromorphic Hardware Design (5th edition)": {
+    titleKo: "뉴로모픽 하드웨어 설계 겨울학교 (제5회)",
+    venueKo: "5일 워크숍 · 11개국 84명 참가",
+    abstractKo:
+      "스파이킹 뉴런 회로, 이벤트 기반 라우팅, FPGA 프로토타이핑 실습과 테이프아웃 준비 참조 설계를 포함합니다.",
+  },
+  "mmWave Measurement Workshop for Graduate Students": {
+    titleKo: "대학원생을 위한 밀리미터파 측정 워크숍",
+    venueKo: "3일 워크숍 · 온웨이퍼 캘리브레이션 및 잡음 특성 분석",
+    abstractKo:
+      "SOLT 캘리브레이션, 디임베딩, 잡음지수 측정을 다루는 67GHz 프로브 스테이션 실습 교육입니다.",
+  },
+  "Best Paper Award — IEEE ISCAS 2026": {
+    titleKo: "최우수 논문상 — IEEE ISCAS 2026",
+    venueKo: "IEEE 국제 회로 및 시스템 심포지엄",
+    abstractKo:
+      "신경 시스템 트랙에서 \"전역 중재 없는 계층형 주소 이벤트 라우팅\"으로 수상했습니다.",
+  },
+  "Outstanding Student Design Award — A-SSCC 2023": {
+    titleKo: "우수 학생 설계상 — A-SSCC 2023",
+    venueKo: "IEEE 아시아 고체회로 학술대회",
+    abstractKo:
+      "학생 설계 경진대회에서 상관 이중 샘플링 12비트 SAR ADC로 수상했습니다.",
+  },
+};

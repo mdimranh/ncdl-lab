@@ -112,11 +112,11 @@ export default async function HomePage() {
           <div className="max-w-3xl">
             <Eyebrow>{dict.home.mottoKicker}</Eyebrow>
             <p className="display mt-4 text-[2rem] leading-tight text-ink-900 sm:text-[2.9rem]">
-              {settings.motto}
+              {localized(locale, settings.motto, settings.mottoKo)}
             </p>
             <div className="rule mt-7" />
             <p className="mt-6 max-w-2xl text-[14px] leading-relaxed text-muted">
-              {settings.tagline}
+              {localized(locale, settings.tagline, settings.taglineKo)}
             </p>
           </div>
 
@@ -182,7 +182,7 @@ export default async function HomePage() {
                   >
                     <div>
                       <p className="text-[14.5px] font-medium text-white">
-                        {position.title}
+                        {localized(locale, position.title, position.titleKo)}
                       </p>
                       <p className="mt-1 flex flex-wrap items-center gap-3 text-[11.5px] text-white/45">
                         <span className="font-mono uppercase tracking-[0.12em] text-brand-300">

@@ -57,6 +57,10 @@ export default async function PositionEditorPage({
             <Input name="title" defaultValue={position?.title ?? ""} required />
           </Field>
 
+          <Field label="Position title (Korean)">
+            <Input name="titleKo" defaultValue={position?.titleKo ?? ""} />
+          </Field>
+
           <div className="grid gap-4 sm:grid-cols-3">
             <Field label="Type">
               <Select name="type" defaultValue={position?.type ?? "phd"}>
@@ -77,6 +81,10 @@ export default async function PositionEditorPage({
 
           <Field label="Description">
             <Textarea name="description" defaultValue={position?.description ?? ""} />
+          </Field>
+
+          <Field label="Description (Korean)" hint="Leave empty to fall back to English.">
+            <Textarea name="descriptionKo" defaultValue={position?.descriptionKo ?? ""} />
           </Field>
 
           <Field label="Requirements" hint="One requirement per line.">
