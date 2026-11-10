@@ -63,19 +63,28 @@ export type EducationEntry = {
   year: string;
 };
 
+export type FigureEntry = {
+  imageUrl: string;
+  caption: string;
+};
+
 export const members = pgTable(
   "members",
   {
     id: serial("id").primaryKey(),
     slug: text("slug").notNull(),
     name: text("name").notNull(),
+    nameKo: text("name_ko"),
     category: memberCategory("category").notNull().default("phd"),
     designation: text("designation").notNull().default(""),
+    designationKo: text("designation_ko"),
     photoUrl: text("photo_url"),
     email: text("email"),
     phone: text("phone"),
     bio: text("bio").notNull().default(""),
+    bioKo: text("bio_ko"),
     interests: jsonb("interests").$type<string[]>().notNull().default([]),
+    interestsKo: jsonb("interests_ko").$type<string[]>().notNull().default([]),
     education: jsonb("education")
       .$type<EducationEntry[]>()
       .notNull()
@@ -86,6 +95,7 @@ export const members = pgTable(
     orcidUrl: text("orcid_url"),
     joinedYear: integer("joined_year"),
     alumniPosition: text("alumni_position"),
+    alumniPositionKo: text("alumni_position_ko"),
     displayOrder: integer("display_order").notNull().default(0),
     published: boolean("published").notNull().default(true),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -104,13 +114,21 @@ export const researchAreas = pgTable("research_areas", {
   id: serial("id").primaryKey(),
   slug: text("slug").notNull().unique(),
   title: text("title").notNull(),
+  titleKo: text("title_ko"),
   tagline: text("tagline").notNull().default(""),
+  taglineKo: text("tagline_ko"),
   icon: text("icon").notNull().default("cpu"),
   summary: text("summary").notNull().default(""),
+  summaryKo: text("summary_ko"),
   overview: text("overview").notNull().default(""),
+  overviewKo: text("overview_ko"),
   objectives: jsonb("objectives").$type<string[]>().notNull().default([]),
+  objectivesKo: jsonb("objectives_ko").$type<string[]>().notNull().default([]),
   methodologies: jsonb("methodologies").$type<string[]>().notNull().default([]),
+  methodologiesKo: jsonb("methodologies_ko").$type<string[]>().notNull().default([]),
   keywords: jsonb("keywords").$type<string[]>().notNull().default([]),
+  figures: jsonb("figures").$type<FigureEntry[]>().notNull().default([]),
+  publishedAt: date("published_at"),
   displayOrder: integer("display_order").notNull().default(0),
   published: boolean("published").notNull().default(true),
 });
@@ -146,13 +164,17 @@ export const publications = pgTable(
   {
     id: serial("id").primaryKey(),
     title: text("title").notNull(),
+    titleKo: text("title_ko"),
     authors: text("authors").notNull(),
     venue: text("venue").notNull().default(""),
+    venueKo: text("venue_ko"),
     type: publicationType("type").notNull().default("journal"),
     year: integer("year").notNull(),
     doi: text("doi"),
     url: text("url"),
+    imageUrl: text("image_url"),
     abstract: text("abstract"),
+    abstractKo: text("abstract_ko"),
     areaId: integer("area_id").references(() => researchAreas.id, {
       onDelete: "set null",
     }),
@@ -173,9 +195,13 @@ export const news = pgTable("news", {
   id: serial("id").primaryKey(),
   slug: text("slug").notNull().unique(),
   title: text("title").notNull(),
+  titleKo: text("title_ko"),
   excerpt: text("excerpt").notNull().default(""),
+  excerptKo: text("excerpt_ko"),
   content: text("content").notNull().default(""),
+  contentKo: text("content_ko"),
   imageUrl: text("image_url"),
+  images: jsonb("images").$type<string[]>().notNull().default([]),
   authorName: text("author_name").notNull().default("NCDL"),
   publishedAt: timestamp("published_at", { withTimezone: true })
     .notNull()

@@ -1,4 +1,5 @@
 import { existsSync } from "node:fs";
+import { eq } from "drizzle-orm";
 import { db, pool } from "./index";
 import {
   collaborations,
@@ -13,6 +14,7 @@ import {
   users,
 } from "./schema";
 import { hashPassword } from "../lib/password";
+import { areaKorean, memberKorean, newsKorean } from "./seed-ko";
 
 if (existsSync(".env")) {
   process.loadEnvFile(".env");
@@ -136,6 +138,77 @@ async function main() {
   const insertedAreas = await db.insert(researchAreas).values(areas).returning();
   const areaId = (slug: string) =>
     insertedAreas.find((area) => area.slug === slug)?.id ?? null;
+
+  // Presentation details used by the public research pages.
+  const areaPresentation: Record<
+    string,
+    { publishedAt: string; figures: { imageUrl: string; caption: string }[] }
+  > = {
+    "neuromorphic-circuit-design": {
+      publishedAt: "2026-10-20",
+      figures: [
+        {
+          imageUrl: "/images/lab/die.svg",
+          caption: "NCDL-SPARK: sixteen spiking cores integrated on a 28 nm die.",
+        },
+        {
+          imageUrl: "/images/lab/wafer.svg",
+          caption: "Shuttle wafer carrying the memristive synapse test structures.",
+        },
+        {
+          imageUrl: "/images/lab/neural.svg",
+          caption: "Measured event rate versus supply voltage across PVT corners.",
+        },
+      ],
+    },
+    "rf-analog-circuit-design": {
+      publishedAt: "2026-09-14",
+      figures: [
+        {
+          imageUrl: "/images/lab/scope.svg",
+          caption: "67 GHz on-wafer noise-figure and load-pull measurement bench.",
+        },
+        {
+          imageUrl: "/images/lab/pcb.svg",
+          caption: "Neural-recording front-end evaluation board with chopper stabilisation.",
+        },
+      ],
+    },
+    "fpga-circuit-and-image-analysis": {
+      publishedAt: "2026-08-05",
+      figures: [
+        {
+          imageUrl: "/images/lab/pcb.svg",
+          caption: "FPGA vision platform with dual camera interfaces and DDR4 capture.",
+        },
+        {
+          imageUrl: "/images/lab/neural.svg",
+          caption: "Frame-level latency of the event-driven detector at 120 fps.",
+        },
+      ],
+    },
+    "robotics-control-circuit-design": {
+      publishedAt: "2026-07-18",
+      figures: [
+        {
+          imageUrl: "/images/lab/pcb.svg",
+          caption: "GaN motor-driver stack used on the quadruped platform.",
+        },
+        {
+          imageUrl: "/images/lab/die.svg",
+          caption: "Spiking locomotion controller test chip after packaging.",
+        },
+      ],
+    },
+  };
+
+  for (const [slug, patch] of Object.entries(areaPresentation)) {
+    await db.update(researchAreas).set(patch).where(eq(researchAreas.slug, slug));
+  }
+
+  for (const [slug, patch] of Object.entries(areaKorean)) {
+    await db.update(researchAreas).set(patch).where(eq(researchAreas.slug, slug));
+  }
 
   await db.insert(siteSettings).values({
     id: 1,
@@ -418,6 +491,10 @@ async function main() {
       displayOrder: 5,
     },
   ]);
+
+  for (const [slug, patch] of Object.entries(memberKorean)) {
+    await db.update(members).set(patch).where(eq(members.slug, slug));
+  }
 
   await db.insert(collaborations).values([
     {
@@ -832,6 +909,12 @@ async function main() {
     },
   ]);
 
+  // Certificate artwork for the publications gallery.
+  await db
+    .update(publications)
+    .set({ imageUrl: "/images/lab/die.svg" })
+    .where(eq(publications.type, "certificate"));
+
   await db.insert(news).values([
     {
       slug: "ncdl-spark-tapeout-returns",
@@ -900,6 +983,28 @@ async function main() {
       publishedAt: new Date("2026-05-04T09:45:00Z"),
     },
   ]);
+
+  // Photo galleries shown on the news detail pages.
+  const newsGalleries: Record<string, string[]> = {
+    "ncdl-spark-tapeout-returns": [
+      "/images/lab/die.svg",
+      "/images/lab/wafer.svg",
+      "/images/lab/scope.svg",
+    ],
+    "best-paper-award-iscas-2026": ["/images/lab/wafer.svg", "/images/lab/neural.svg"],
+    "winter-school-2026-announced": ["/images/lab/neural.svg", "/images/lab/pcb.svg"],
+    "memristor-array-milestone": ["/images/lab/wafer.svg", "/images/lab/die.svg"],
+    "quadruped-field-trial": ["/images/lab/pcb.svg", "/images/lab/scope.svg"],
+    "imec-collaboration-renewed": ["/images/lab/scope.svg", "/images/lab/die.svg"],
+  };
+
+  for (const [slug, images] of Object.entries(newsGalleries)) {
+    await db.update(news).set({ images }).where(eq(news.slug, slug));
+  }
+
+  for (const [slug, patch] of Object.entries(newsKorean)) {
+    await db.update(news).set(patch).where(eq(news.slug, slug));
+  }
 
   await db.insert(positions).values([
     {

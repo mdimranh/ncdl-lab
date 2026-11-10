@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type Slide = {
+type Slide = {
   imageUrl: string;
   title: string;
   caption: string;
@@ -12,125 +12,99 @@ export type Slide = {
 
 export function HeroCarousel({ slides }: { slides: Slide[] }) {
   const [index, setIndex] = useState(0);
-  const [playing, setPlaying] = useState(true);
-  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const go = useCallback(
-    (next: number) => {
-      if (slides.length === 0) return;
-      setIndex(((next % slides.length) + slides.length) % slides.length);
-    },
-    [slides.length],
-  );
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (!playing || slides.length < 2) return;
-    timer.current = setInterval(() => {
-      setIndex((current) => (current + 1) % slides.length);
-    }, 6000);
-    return () => {
-      if (timer.current) clearInterval(timer.current);
-    };
-  }, [playing, slides.length]);
+    if (paused || slides.length < 2) return;
+    const timer = window.setInterval(
+      () => setIndex((value) => (value + 1) % slides.length),
+      6500,
+    );
+    return () => window.clearInterval(timer);
+  }, [paused, slides.length]);
 
   if (slides.length === 0) {
     return (
-      <div className="absolute inset-0 bg-ink-950">
-        <div className="grid-tech absolute inset-0 opacity-60" />
+      <div className="grid h-[46vh] place-items-center bg-ink-800 text-sm text-white/40">
+        Lab photographs will appear here.
       </div>
     );
   }
 
+  const safeIndex = index % slides.length;
+
+  const move = (step: number) =>
+    setIndex((value) => (value + step + slides.length) % slides.length);
+
   return (
     <div
-      className="absolute inset-0"
-      onMouseEnter={() => setPlaying(false)}
-      onMouseLeave={() => setPlaying(true)}
-      role="group"
-      aria-roledescription="carousel"
-      aria-label="Laboratory highlights"
+      className="relative isolate h-[54vh] min-h-[320px] overflow-hidden bg-ink-900 sm:h-[62vh]"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
     >
       {slides.map((slide, slideIndex) => (
-        <div
-          key={slide.imageUrl + slideIndex}
-          aria-hidden={slideIndex !== index}
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          key={`${slide.imageUrl}-${slideIndex}`}
+          src={slide.imageUrl}
+          alt={slide.title || "Laboratory photograph"}
           className={cn(
-            "absolute inset-0 transition-opacity duration-[1200ms] ease-out",
-            slideIndex === index ? "opacity-100" : "opacity-0",
+            "absolute inset-0 h-full w-full object-cover transition-opacity duration-700",
+            slideIndex === safeIndex ? "opacity-100" : "opacity-0",
           )}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={slide.imageUrl}
-            alt={slide.title || "NCDL laboratory"}
-            className={cn(
-              "h-full w-full object-cover transition-transform duration-[9000ms] ease-linear",
-              slideIndex === index ? "scale-105" : "scale-100",
-            )}
-          />
-        </div>
+        />
       ))}
 
-      <div className="absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/92 to-ink-950/45" />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-transparent to-ink-950/40" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink-950/90 via-ink-950/35 to-ink-950/10" />
 
-      <div className="absolute inset-x-0 bottom-0 z-20">
-        <div className="wrap flex flex-col gap-4 pb-6 sm:flex-row sm:items-end sm:justify-between">
-          <p className="max-w-lg text-[12.5px] leading-relaxed text-white/60">
-            <span className="eyebrow mr-2 text-brand-300">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            {slides[index]?.caption || slides[index]?.title}
-          </p>
+      <div className="wrap relative flex h-full flex-col justify-end pb-10">
+        <div key={safeIndex} className="animate-fade max-w-2xl">
+          {slides[safeIndex].title && (
+            <p className="eyebrow text-brand-300">{slides[safeIndex].title}</p>
+          )}
+          {slides[safeIndex].caption && (
+            <p className="font-display mt-2 max-w-xl text-[1.5rem] font-medium leading-snug text-white sm:text-[2rem]">
+              {slides[safeIndex].caption}
+            </p>
+          )}
+        </div>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              {slides.map((slide, slideIndex) => (
-                <button
-                  key={slide.imageUrl + slideIndex}
-                  type="button"
-                  onClick={() => go(slideIndex)}
-                  aria-label={`Show slide ${slideIndex + 1}`}
-                  aria-current={slideIndex === index}
-                  className={cn(
-                    "h-1.5 rounded-full transition-all",
-                    slideIndex === index
-                      ? "w-7 bg-brand-300"
-                      : "w-1.5 bg-white/35 hover:bg-white/60",
-                  )}
-                />
-              ))}
-            </div>
-            <div className="flex items-center gap-1">
+        <div className="mt-8 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {slides.map((slide, dotIndex) => (
               <button
+                key={`${slide.imageUrl}-dot-${dotIndex}`}
                 type="button"
-                onClick={() => setPlaying((value) => !value)}
-                aria-label={playing ? "Pause slideshow" : "Play slideshow"}
-                className="grid h-8 w-8 place-items-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white/35 hover:text-white"
-              >
-                {playing ? (
-                  <Pause className="h-3 w-3" />
-                ) : (
-                  <Play className="h-3 w-3" />
+                onClick={() => setIndex(dotIndex)}
+                aria-label={`Go to slide ${dotIndex + 1}`}
+                aria-current={dotIndex === safeIndex ? "true" : undefined}
+                className={cn(
+                  "h-[3px] transition-all",
+                  dotIndex === safeIndex
+                    ? "w-8 bg-brand-400"
+                    : "w-4 bg-white/35 hover:bg-white/60",
                 )}
-              </button>
-              <button
-                type="button"
-                onClick={() => go(index - 1)}
-                aria-label="Previous slide"
-                className="grid h-8 w-8 place-items-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white/35 hover:text-white"
-              >
-                <ArrowLeft className="h-3.5 w-3.5" />
-              </button>
-              <button
-                type="button"
-                onClick={() => go(index + 1)}
-                aria-label="Next slide"
-                className="grid h-8 w-8 place-items-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white/35 hover:text-white"
-              >
-                <ArrowRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
+              />
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => move(-1)}
+              aria-label="Previous slide"
+              className="grid h-9 w-9 place-items-center border border-white/25 text-white/75 transition-colors hover:border-brand-300 hover:text-brand-300"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => move(1)}
+              aria-label="Next slide"
+              className="grid h-9 w-9 place-items-center border border-white/25 text-white/75 transition-colors hover:border-brand-300 hover:text-brand-300"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </div>

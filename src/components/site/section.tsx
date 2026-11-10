@@ -1,17 +1,27 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Eyebrow({
   children,
+  tone = "copper",
   className,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
+  tone?: "copper" | "muted" | "light";
   className?: string;
 }) {
   return (
-    <p className={cn("eyebrow flex items-center gap-2 text-brand-600", className)}>
-      <span className="h-1 w-1 rounded-full bg-current" />
+    <p
+      className={cn(
+        "eyebrow",
+        tone === "copper" && "text-brand-600",
+        tone === "muted" && "text-muted",
+        tone === "light" && "text-brand-300",
+        className,
+      )}
+    >
       {children}
     </p>
   );
@@ -23,30 +33,22 @@ export function SectionHeading({
   description,
   action,
   tone = "light",
-  className,
 }: {
-  eyebrow: string;
-  title: React.ReactNode;
+  eyebrow?: string;
+  title: string;
   description?: string;
   action?: { label: string; href: string };
   tone?: "light" | "dark";
-  className?: string;
 }) {
   return (
-    <div
-      className={cn(
-        "flex flex-col gap-6 border-b pb-8 sm:flex-row sm:items-end sm:justify-between",
-        tone === "dark" ? "border-white/10" : "border-line",
-        className,
-      )}
-    >
+    <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
       <div className="max-w-2xl">
-        <Eyebrow className={tone === "dark" ? "text-brand-300" : undefined}>
-          {eyebrow}
-        </Eyebrow>
+        {eyebrow && (
+          <Eyebrow tone={tone === "dark" ? "light" : "copper"}>{eyebrow}</Eyebrow>
+        )}
         <h2
           className={cn(
-            "display mt-3 text-3xl sm:text-4xl",
+            "display mt-3 text-[1.9rem] sm:text-[2.35rem]",
             tone === "dark" ? "text-white" : "text-ink-900",
           )}
         >
@@ -55,7 +57,7 @@ export function SectionHeading({
         {description && (
           <p
             className={cn(
-              "mt-4 text-[14.5px] leading-relaxed",
+              "mt-3 text-[14px] leading-relaxed",
               tone === "dark" ? "text-white/60" : "text-muted",
             )}
           >
@@ -63,18 +65,19 @@ export function SectionHeading({
           </p>
         )}
       </div>
+
       {action && (
         <Link
           href={action.href}
           className={cn(
-            "group inline-flex shrink-0 items-center gap-2 text-[13px] font-medium transition-colors",
+            "group inline-flex shrink-0 items-center gap-2 text-[12.5px] font-medium",
             tone === "dark"
-              ? "text-brand-300 hover:text-white"
-              : "text-ink-700 hover:text-brand-700",
+              ? "text-brand-300 hover:text-brand-200"
+              : "text-ink-800 hover:text-brand-700",
           )}
         >
           {action.label}
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
         </Link>
       )}
     </div>
@@ -85,17 +88,17 @@ export function Tag({
   children,
   tone = "default",
 }: {
-  children: React.ReactNode;
-  tone?: "default" | "brand" | "dark" | "success";
+  children: ReactNode;
+  tone?: "default" | "brand" | "steel" | "dark";
 }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.12em]",
-        tone === "default" && "bg-surface-2 text-muted",
+        "inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-[10.5px] font-medium uppercase tracking-[0.1em]",
+        tone === "default" && "bg-surface text-ink-600",
         tone === "brand" && "bg-brand-50 text-brand-700",
+        tone === "steel" && "bg-steel-50 text-steel-600",
         tone === "dark" && "bg-white/10 text-white/70",
-        tone === "success" && "bg-emerald-50 text-emerald-700",
       )}
     >
       {children}

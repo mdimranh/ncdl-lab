@@ -1,12 +1,14 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight, CalendarDays, UserRound } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarDays, UserRound } from "lucide-react";
 import { and, desc, eq, ne } from "drizzle-orm";
 import { db } from "@/db";
 import { news } from "@/db/schema";
 import { formatDate } from "@/lib/utils";
-import { Tag } from "@/components/site/section";
+import { Eyebrow, Tag } from "@/components/site/section";
+import { getDictionary, localized } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 
 async function getArticle(slug: string) {
   const [article] = await db
@@ -37,6 +39,9 @@ export default async function NewsArticlePage({
   const article = await getArticle(slug);
   if (!article) notFound();
 
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
+
   const more = await db
     .select()
     .from(news)
@@ -44,7 +49,7 @@ export default async function NewsArticlePage({
     .orderBy(desc(news.publishedAt))
     .limit(3);
 
-  const paragraphs = article.content
+  const paragraphs = localized(locale, article.content, article.contentKo)
     .split("\n\n")
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
@@ -53,33 +58,33 @@ export default async function NewsArticlePage({
     <>
       <article>
         <header className="border-b border-line bg-surface">
-          <div className="wrap py-10 lg:py-14">
+          <div className="wrap py-9 lg:py-12">
             <Link
               href="/news"
-              className="inline-flex items-center gap-2 text-[12.5px] font-medium text-muted transition-colors hover:text-ink-900"
+              className="inline-flex items-center gap-2 text-[12px] font-medium text-muted hover:text-ink-900"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
-              All news
+              {dict.news.title}
             </Link>
 
-            <div className="mt-7 max-w-3xl">
-              <Tag tone="brand">News</Tag>
-              <h1 className="display mt-4 text-3xl leading-tight text-ink-900 sm:text-[2.7rem]">
-                {article.title}
+            <div className="mt-6 max-w-3xl">
+              <Tag tone="brand">{dict.nav.news}</Tag>
+              <h1 className="display mt-3 text-[2rem] leading-tight text-ink-900 sm:text-[2.6rem]">
+                {localized(locale, article.title, article.titleKo)}
               </h1>
-              <p className="mt-4 text-[14.5px] leading-relaxed text-muted">
-                {article.excerpt}
+              <p className="mt-3 text-[14px] leading-relaxed text-muted">
+                {localized(locale, article.excerpt, article.excerptKo)}
               </p>
 
-              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-[12px] text-muted">
+              <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[11.5px] text-muted">
                 <span className="inline-flex items-center gap-1.5">
-                  <CalendarDays className="h-3.5 w-3.5 text-brand-600" />
+                  <CalendarDays className="h-3.5 w-3.5 text-steel-500" />
                   <time dateTime={new Date(article.publishedAt).toISOString()}>
                     {formatDate(article.publishedAt)}
                   </time>
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <UserRound className="h-3.5 w-3.5 text-brand-600" />
+                  <UserRound className="h-3.5 w-3.5 text-steel-500" />
                   {article.authorName}
                 </span>
               </div>
@@ -88,9 +93,9 @@ export default async function NewsArticlePage({
         </header>
 
         {article.imageUrl && (
-          <div className="border-b border-line bg-ink-950">
+          <div className="bg-ink-900">
             <div className="wrap py-6">
-              <div className="overflow-hidden rounded-2xl border border-white/10">
+              <div className="overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={article.imageUrl}
@@ -103,46 +108,58 @@ export default async function NewsArticlePage({
         )}
 
         <div className="bg-white">
-          <div className="wrap py-12 lg:py-16">
-            <div className="article-body max-w-3xl text-[14.5px]">
+          <div className="wrap grid gap-10 py-10 lg:grid-cols-[1.6fr_1fr] lg:py-14">
+            <div className="article-body max-w-3xl text-[14px]">
               {paragraphs.map((paragraph) => (
                 <p key={paragraph.slice(0, 40)}>{paragraph}</p>
               ))}
             </div>
 
-            <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
-              <p className="text-[12.5px] text-muted">
-                Published by {article.authorName}
-              </p>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-ink-800 hover:text-brand-700"
-              >
-                Media enquiries
-                <ArrowUpRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
+            {article.images.length > 0 && (
+              <aside>
+                <Eyebrow>{dict.news.gallery}</Eyebrow>
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  {article.images.map((image, index) => (
+                    <div key={`${image}-${index}`} className="aspect-square overflow-hidden bg-surface-2">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={image}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </aside>
+            )}
           </div>
         </div>
       </article>
 
       {more.length > 0 && (
         <section className="border-t border-line bg-surface">
-          <div className="wrap py-14">
-            <h2 className="eyebrow text-brand-600">More from the lab</h2>
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <div className="wrap py-10 lg:py-14">
+            <h2 className="display text-[1.5rem] text-ink-900">{dict.news.more}</h2>
+            <div className="mt-5 grid gap-4 sm:grid-cols-3">
               {more.map((item) => (
                 <Link
                   key={item.id}
                   href={`/news/${item.slug}`}
-                  className="group rounded-2xl border border-line bg-white p-5 transition-colors hover:border-brand-300"
+                  className="group border border-line bg-white p-5 transition-colors hover:border-steel-300"
                 >
-                  <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted">
+                  <time
+                    dateTime={new Date(item.publishedAt).toISOString()}
+                    className="font-mono text-[10px] uppercase tracking-[0.12em] text-brand-600"
+                  >
                     {formatDate(item.publishedAt)}
+                  </time>
+                  <p className="mt-2 text-[13px] font-medium leading-snug text-ink-900 group-hover:text-brand-700">
+                    {localized(locale, item.title, item.titleKo)}
                   </p>
-                  <p className="mt-2.5 text-[13.5px] font-semibold leading-snug text-ink-900 group-hover:text-brand-700">
-                    {item.title}
-                  </p>
+                  <span className="mt-3 inline-flex items-center gap-1 text-[11px] text-steel-600">
+                    {dict.common.readMore}
+                    <ArrowRight className="h-3 w-3" />
+                  </span>
                 </Link>
               ))}
             </div>

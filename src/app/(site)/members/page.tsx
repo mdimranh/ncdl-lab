@@ -1,43 +1,101 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowUpRight, Globe, Mail, MapPin } from "lucide-react";
+import { ArrowUpRight, Globe, Mail, Phone } from "lucide-react";
 import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { collaborations, members } from "@/db/schema";
 import { MemberAvatar } from "@/components/site/member-avatar";
-import { Eyebrow, SectionHeading, Tag } from "@/components/site/section";
+import { TabGroup } from "@/components/site/tab-group";
+import { Eyebrow, Tag } from "@/components/site/section";
+import { getDictionary, localized, type Locale } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 
 export const metadata: Metadata = {
   title: "Members",
   description:
-    "Faculty, doctoral researchers, master's students and alumni of the Neuromorphic Chip Design Laboratory.",
+    "Faculty, doctoral researchers, master's students, alumni and collaborations of the Neuromorphic Chip Design Laboratory.",
 };
 
-const groups = [
-  {
-    key: "professor" as const,
-    title: "Faculty",
-    description: "Principal investigators who lead the laboratory's research programmes.",
-  },
-  {
-    key: "phd" as const,
-    title: "PhD Researchers",
-    description: "Doctoral candidates carrying out the lab's core silicon and systems work.",
-  },
-  {
-    key: "masters" as const,
-    title: "Master's Students",
-    description: "Thesis students contributing to active projects across all four research areas.",
-  },
-  {
-    key: "alumni" as const,
-    title: "Alumni",
-    description: "Former members who now lead research and design teams around the world.",
-  },
-];
+function MemberCards({
+  people,
+  labels,
+  locale,
+}: {
+  people: (typeof members.$inferSelect)[];
+  labels: { contact: string; seeMore: string };
+  locale: Locale;
+}) {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {people.map((person, index) => (
+        <article
+          key={person.id}
+          className="flex flex-col border border-line bg-white p-5 transition-colors hover:border-steel-300"
+        >
+          <div className="flex gap-4">
+            <div className="h-24 w-24 shrink-0 overflow-hidden bg-surface-2">
+              <MemberAvatar name={person.name} photoUrl={person.photoUrl} index={index} />
+            </div>
+            <div className="min-w-0">
+              <h3 className="font-display text-[16px] font-semibold leading-snug text-ink-900">
+                {localized(locale, person.name, person.nameKo)}
+              </h3>
+              <p className="mt-1 text-[12px] leading-snug text-muted">
+                {localized(locale, person.designation, person.designationKo)}
+              </p>
+              {person.alumniPosition && (
+                <p className="mt-1.5 text-[11.5px] text-steel-600">
+                  {localized(locale, person.alumniPosition, person.alumniPositionKo)}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-4 flex-1 space-y-1.5 text-[12px] text-muted">
+            {person.email && (
+              <a
+                href={`mailto:${person.email}`}
+                className="flex items-center gap-1.5 hover:text-steel-600"
+              >
+                <Mail className="h-3.5 w-3.5 text-steel-500" />
+                <span className="truncate">{person.email}</span>
+              </a>
+            )}
+            {person.phone && (
+              <a
+                href={`tel:${person.phone.replace(/\s/g, "")}`}
+                className="flex items-center gap-1.5 hover:text-steel-600"
+              >
+                <Phone className="h-3.5 w-3.5 text-steel-500" />
+                {person.phone}
+              </a>
+            )}
+          </div>
+
+          <div className="mt-4 flex items-center justify-between border-t border-line pt-3">
+            <a
+              href={person.email ? `mailto:${person.email}` : "/contact"}
+              className="text-[11.5px] font-medium text-steel-600 hover:text-steel-700"
+            >
+              {labels.contact}
+            </a>
+            <Link
+              href={`/members/${person.slug}`}
+              className="inline-flex items-center gap-1 text-[11.5px] font-medium text-brand-700 hover:text-brand-800"
+            >
+              {labels.seeMore}
+              <ArrowUpRight className="h-3 w-3" />
+            </Link>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
 
 export default async function MembersPage() {
-  const [people, partners] = await Promise.all([
+  const [locale, people, partners] = await Promise.all([
+    getLocale(),
     db
       .select()
       .from(members)
@@ -45,121 +103,51 @@ export default async function MembersPage() {
       .orderBy(asc(members.displayOrder), asc(members.name)),
     db.select().from(collaborations).orderBy(asc(collaborations.displayOrder)),
   ]);
+  const dict = getDictionary(locale);
 
-  return (
-    <>
-      <section className="border-b border-line bg-surface">
-        <div className="wrap py-16 lg:py-20">
-          <Eyebrow>People</Eyebrow>
-          <h1 className="display mt-4 max-w-3xl text-4xl text-ink-900 sm:text-5xl">
-            The people behind the silicon.
-          </h1>
-          <p className="mt-5 max-w-2xl text-[14.5px] leading-relaxed text-muted">
-            Three faculty members, four doctoral researchers and five master&apos;s
-            students work side by side on the same benches. Alumni carry the
-            lab&apos;s methods into universities and companies worldwide.
-          </p>
+  const professors = people.filter((person) => person.category === "professor");
+  const students = people.filter(
+    (person) => person.category === "phd" || person.category === "masters",
+  );
+  const alumni = people.filter((person) => person.category === "alumni");
 
-          <nav className="mt-9 flex flex-wrap gap-2" aria-label="Member groups">
-            {groups.map((group) => {
-              const total = people.filter((person) => person.category === group.key).length;
-              return (
-                <a
-                  key={group.key}
-                  href={`#${group.key}`}
-                  className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-[12.5px] font-medium text-ink-700 transition-colors hover:border-brand-300 hover:text-brand-700"
-                >
-                  {group.title}
-                  <span className="font-mono text-[10.5px] text-muted">{total}</span>
-                </a>
-              );
-            })}
-          </nav>
-        </div>
-      </section>
+  const cardLabels = { contact: dict.common.contact, seeMore: dict.common.seeMore };
 
-      {groups.map((group, groupIndex) => {
-        const items = people.filter((person) => person.category === group.key);
-        if (items.length === 0) return null;
-
-        return (
-          <section
-            key={group.key}
-            id={group.key}
-            className={groupIndex % 2 === 1 ? "border-y border-line bg-surface" : "bg-white"}
-          >
-            <div className="wrap py-16 lg:py-20">
-              <SectionHeading
-                eyebrow={`${String(groupIndex + 1).padStart(2, "0")} · ${items.length} people`}
-                title={group.title}
-                description={group.description}
-              />
-
-              <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {items.map((person, index) => (
-                  <Link
-                    key={person.id}
-                    href={`/members/${person.slug}`}
-                    className="group flex gap-4 rounded-2xl border border-line bg-white p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-[0_20px_50px_-34px_rgba(12,27,48,0.4)]"
-                  >
-                    <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-surface-2">
-                      <MemberAvatar
-                        name={person.name}
-                        photoUrl={person.photoUrl}
-                        index={index}
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-[14.5px] font-semibold text-ink-900">
-                        {person.name}
-                      </p>
-                      <p className="mt-0.5 line-clamp-2 text-[12px] leading-snug text-muted">
-                        {person.designation}
-                      </p>
-                      {person.alumniPosition && (
-                        <p className="mt-1.5 line-clamp-1 text-[11.5px] text-brand-700">
-                          {person.alumniPosition}
-                        </p>
-                      )}
-                      <div className="mt-2.5 flex flex-wrap gap-1.5">
-                        {person.interests.slice(0, 2).map((interest) => (
-                          <span
-                            key={interest}
-                            className="rounded-md bg-surface px-1.5 py-0.5 text-[10.5px] text-ink-600"
-                          >
-                            {interest}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <ArrowUpRight className="h-4 w-4 shrink-0 text-line-strong transition-colors group-hover:text-brand-600" />
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </section>
-        );
-      })}
-
-      <section id="collaborations" className="bg-white">
-        <div className="wrap py-16 lg:py-20">
-          <SectionHeading
-            eyebrow="Collaborations"
-            title="We do not work alone."
-            description="Shared tape-outs, co-supervised students and joint measurement campaigns with partners across four continents."
-          />
-
-          <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  const tabItems = [
+    {
+      key: "professor",
+      label: dict.members.tabs.professor,
+      count: professors.length,
+      content: <MemberCards people={professors} labels={cardLabels} locale={locale} />,
+    },
+    {
+      key: "phd-masters",
+      label: dict.members.tabs.phdMasters,
+      count: students.length,
+      content: <MemberCards people={students} labels={cardLabels} locale={locale} />,
+    },
+    {
+      key: "alumni",
+      label: dict.members.tabs.alumni,
+      count: alumni.length,
+      content: <MemberCards people={alumni} labels={cardLabels} locale={locale} />,
+    },
+    {
+      key: "collaborations",
+      label: dict.members.tabs.collaborations,
+      count: partners.length,
+      content: (
+        <div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {partners.map((partner) => (
-              <div
-                key={partner.id}
-                className="rounded-2xl border border-line bg-white p-6"
-              >
+              <article key={partner.id} className="border border-line bg-white p-6">
                 <div className="flex items-start justify-between gap-3">
-                  <p className="display text-lg text-ink-900">{partner.institution}</p>
-                  <Tag>{partner.country}</Tag>
+                  <h3 className="font-display text-[16px] font-semibold leading-snug text-ink-900">
+                    {partner.institution}
+                  </h3>
+                  {partner.country && <Tag tone="steel">{partner.country}</Tag>}
                 </div>
-                <p className="mt-3 text-[13px] leading-relaxed text-muted">
+                <p className="mt-3 text-[12.5px] leading-relaxed text-muted">
                   {partner.description}
                 </p>
                 {partner.websiteUrl && (
@@ -167,38 +155,56 @@ export default async function MembersPage() {
                     href={partner.websiteUrl}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="mt-4 inline-flex items-center gap-1.5 text-[12px] font-medium text-brand-700 hover:text-brand-800"
+                    className="mt-4 inline-flex items-center gap-1.5 text-[11.5px] font-medium text-steel-600 hover:text-steel-700"
                   >
                     <Globe className="h-3.5 w-3.5" />
-                    Visit institution
+                    {dict.common.seeMore}
+                    <ArrowUpRight className="h-3 w-3" />
                   </a>
                 )}
-              </div>
+              </article>
             ))}
           </div>
 
-          <div className="mt-12 flex flex-col items-start justify-between gap-4 rounded-2xl border border-line bg-surface p-7 sm:flex-row sm:items-center">
+          <div className="mt-8 flex flex-col items-start justify-between gap-4 border border-line bg-surface p-6 sm:flex-row sm:items-center">
             <div>
-              <p className="display text-lg text-ink-900">Interested in collaborating?</p>
-              <p className="mt-1.5 max-w-xl text-[13px] leading-relaxed text-muted">
-                We welcome joint proposals, student exchanges and shared shuttle
-                runs. Tell us about your group and the problem you want to solve.
+              <p className="font-display text-[16px] text-ink-900">
+                {dict.members.collaborateTitle}
+              </p>
+              <p className="mt-1.5 max-w-xl text-[12.5px] leading-relaxed text-muted">
+                {dict.members.collaborateBody}
               </p>
             </div>
             <Link
               href="/contact"
-              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-ink-950 px-5 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-ink-800"
+              className="inline-flex shrink-0 items-center gap-2 bg-ink-900 px-5 py-2.5 text-[12.5px] font-medium text-white hover:bg-ink-800"
             >
               <Mail className="h-4 w-4" />
-              Start a conversation
+              {dict.common.contact}
             </Link>
           </div>
+        </div>
+      ),
+    },
+  ];
 
-          <p className="mt-6 flex items-center gap-2 text-[11.5px] text-muted">
-            <MapPin className="h-3.5 w-3.5 text-brand-600" />
-            Students supervised jointly with partner institutions are listed with
-            their current affiliation.
+  return (
+    <>
+      <section className="border-b border-line bg-surface">
+        <div className="wrap py-12 lg:py-16">
+          <Eyebrow>{dict.nav.members}</Eyebrow>
+          <h1 className="display mt-3 text-4xl text-ink-900 sm:text-5xl">
+            {dict.members.title}
+          </h1>
+          <p className="mt-4 max-w-2xl text-[14px] leading-relaxed text-muted">
+            {dict.members.intro}
           </p>
+        </div>
+      </section>
+
+      <section className="bg-white">
+        <div className="wrap py-10 lg:py-14">
+          <TabGroup items={tabItems} />
         </div>
       </section>
     </>

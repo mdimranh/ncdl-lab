@@ -71,6 +71,7 @@ export async function saveMemberAction(formData: FormData): Promise<void> {
 
   const values = {
     name,
+    nameKo: optional(formData.get("nameKo")),
     slug,
     category: pick(
       str(formData.get("category")),
@@ -78,11 +79,14 @@ export async function saveMemberAction(formData: FormData): Promise<void> {
       "phd",
     ),
     designation: str(formData.get("designation")),
+    designationKo: optional(formData.get("designationKo")),
     photoUrl,
     email: optional(formData.get("email")),
     phone: optional(formData.get("phone")),
     bio: str(formData.get("bio")),
+    bioKo: optional(formData.get("bioKo")),
     interests: parseLines(formData.get("interests")),
+    interestsKo: parseLines(formData.get("interestsKo")),
     education,
     websiteUrl: optional(formData.get("websiteUrl")),
     scholarUrl: optional(formData.get("scholarUrl")),
@@ -90,6 +94,7 @@ export async function saveMemberAction(formData: FormData): Promise<void> {
     orcidUrl: optional(formData.get("orcidUrl")),
     joinedYear: int(formData.get("joinedYear")),
     alumniPosition: optional(formData.get("alumniPosition")),
+    alumniPositionKo: optional(formData.get("alumniPositionKo")),
     displayOrder: int(formData.get("displayOrder")) ?? 0,
     published: bool(formData.get("published")),
   };
@@ -129,17 +134,30 @@ export async function saveAreaAction(formData: FormData): Promise<void> {
 
   const values = {
     title,
+    titleKo: optional(formData.get("titleKo")),
     slug,
     tagline: str(formData.get("tagline")),
+    taglineKo: optional(formData.get("taglineKo")),
     icon: str(formData.get("icon")) || "cpu",
     summary: str(formData.get("summary")),
+    summaryKo: optional(formData.get("summaryKo")),
     overview: str(formData.get("overview")),
+    overviewKo: optional(formData.get("overviewKo")),
     objectives: parseLines(formData.get("objectives")),
+    objectivesKo: parseLines(formData.get("objectivesKo")),
     methodologies: parseLines(formData.get("methodologies")),
+    methodologiesKo: parseLines(formData.get("methodologiesKo")),
     keywords: str(formData.get("keywords"))
       .split(",")
       .map((keyword) => keyword.trim())
       .filter(Boolean),
+    figures: parseLines(formData.get("figures"))
+      .map((line) => {
+        const [imageUrl, ...caption] = line.split("|");
+        return { imageUrl: imageUrl.trim(), caption: caption.join("|").trim() };
+      })
+      .filter((figure) => figure.imageUrl.length > 0),
+    publishedAt: optional(formData.get("publishedAt")),
     displayOrder: int(formData.get("displayOrder")) ?? 0,
     published: bool(formData.get("published")),
   };
@@ -229,8 +247,10 @@ export async function savePublicationAction(formData: FormData): Promise<void> {
   const doi = optional(formData.get("doi"));
   const values = {
     title,
+    titleKo: optional(formData.get("titleKo")),
     authors,
     venue: str(formData.get("venue")),
+    venueKo: optional(formData.get("venueKo")),
     type: pick(
       str(formData.get("type")),
       ["journal", "conference", "chip", "workshop", "certificate"] as const,
@@ -239,7 +259,9 @@ export async function savePublicationAction(formData: FormData): Promise<void> {
     year: year as number,
     doi,
     url: optional(formData.get("url")) ?? (doi ? `https://doi.org/${doi}` : null),
+    imageUrl: optional(formData.get("imageUrl")),
     abstract: optional(formData.get("abstract")),
+    abstractKo: optional(formData.get("abstractKo")),
     areaId: int(formData.get("areaId")),
     featured: bool(formData.get("featured")),
   };
@@ -281,10 +303,14 @@ export async function saveNewsAction(formData: FormData): Promise<void> {
 
   const values = {
     title,
+    titleKo: optional(formData.get("titleKo")),
     slug,
     excerpt: str(formData.get("excerpt")),
+    excerptKo: optional(formData.get("excerptKo")),
     content: str(formData.get("content")),
+    contentKo: optional(formData.get("contentKo")),
     imageUrl,
+    images: parseLines(formData.get("images")),
     authorName: str(formData.get("authorName")) || "NCDL",
     publishedAt: Number.isNaN(publishedAt.getTime()) ? new Date() : publishedAt,
     isPublished: bool(formData.get("isPublished")),

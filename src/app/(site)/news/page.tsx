@@ -1,11 +1,14 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, CalendarDays } from "lucide-react";
-import { desc, eq } from "drizzle-orm";
+import { ArrowRight } from "lucide-react";
+import { count, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { news } from "@/db/schema";
 import { formatDate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Eyebrow } from "@/components/site/section";
+import { getDictionary, localized } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 
 export const metadata: Metadata = {
   title: "News",
@@ -13,110 +16,130 @@ export const metadata: Metadata = {
     "Tape-outs, awards, field trials and announcements from the Neuromorphic Chip Design Laboratory.",
 };
 
-export default async function NewsPage() {
+const PAGE_SIZE = 6;
+
+export default async function NewsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const [locale, params, totalRows] = await Promise.all([
+    getLocale(),
+    searchParams,
+    db.select({ value: count() }).from(news).where(eq(news.isPublished, true)),
+  ]);
+  const dict = getDictionary(locale);
+
+  const total = totalRows[0]?.value ?? 0;
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const requested = Number.parseInt(params.page ?? "1", 10);
+  const page = Number.isNaN(requested) ? 1 : Math.min(Math.max(requested, 1), pages);
+
   const items = await db
     .select()
     .from(news)
     .where(eq(news.isPublished, true))
-    .orderBy(desc(news.publishedAt));
+    .orderBy(desc(news.publishedAt))
+    .limit(PAGE_SIZE)
+    .offset((page - 1) * PAGE_SIZE);
 
-  const [lead, ...rest] = items;
+  const hrefFor = (number: number) => (number === 1 ? "/news" : `/news?page=${number}`);
 
   return (
     <>
       <section className="border-b border-line bg-surface">
-        <div className="wrap py-16 lg:py-20">
-          <Eyebrow>News & announcements</Eyebrow>
-          <h1 className="display mt-4 max-w-3xl text-4xl text-ink-900 sm:text-5xl">
-            From the bench.
+        <div className="wrap py-12 lg:py-16">
+          <Eyebrow>{dict.nav.news}</Eyebrow>
+          <h1 className="display mt-3 text-4xl text-ink-900 sm:text-5xl">
+            {dict.news.title}
           </h1>
-          <p className="mt-5 max-w-2xl text-[14.5px] leading-relaxed text-muted">
-            Silicon returns, measurement milestones, awards and the occasional
-            robot walking across campus.
+          <p className="mt-4 max-w-2xl text-[14px] leading-relaxed text-muted">
+            {dict.news.intro}
           </p>
         </div>
       </section>
 
       <section className="bg-white">
-        <div className="wrap py-14 lg:py-20">
-          {lead && (
-            <Link
-              href={`/news/${lead.slug}`}
-              className="group grid overflow-hidden rounded-3xl border border-line bg-white transition-all duration-300 hover:border-brand-300 hover:shadow-[0_30px_80px_-48px_rgba(12,27,48,0.45)] lg:grid-cols-2"
-            >
-              <div className="relative aspect-[16/10] overflow-hidden bg-ink-900 lg:aspect-auto lg:h-full">
-                {lead.imageUrl && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={lead.imageUrl}
-                    alt=""
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                  />
-                )}
-              </div>
-              <div className="flex flex-col justify-center p-7 lg:p-10">
-                <div className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.16em] text-brand-700">
-                  Latest
-                  <span className="h-1 w-1 rounded-full bg-brand-400" />
-                  <span className="text-muted">{formatDate(lead.publishedAt)}</span>
-                </div>
-                <h2 className="display mt-4 text-2xl leading-snug text-ink-900 sm:text-3xl">
-                  {lead.title}
-                </h2>
-                <p className="mt-4 text-[13.5px] leading-relaxed text-muted">
-                  {lead.excerpt}
-                </p>
-                <span className="mt-6 inline-flex items-center gap-2 text-[13px] font-medium text-ink-900">
-                  Read the full story
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </span>
-              </div>
-            </Link>
-          )}
-
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {rest.map((item) => (
-              <Link
-                key={item.id}
-                href={`/news/${item.slug}`}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-white transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-[0_24px_60px_-36px_rgba(12,27,48,0.35)]"
-              >
-                <div className="relative aspect-[16/9] overflow-hidden bg-ink-900">
-                  {item.imageUrl && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={item.imageUrl}
-                      alt=""
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  )}
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <div className="flex items-center gap-1.5 text-[11px] text-muted">
-                    <CalendarDays className="h-3.5 w-3.5 text-brand-600" />
-                    <time dateTime={new Date(item.publishedAt).toISOString()}>
+        <div className="wrap py-10 lg:py-14">
+          {items.length === 0 ? (
+            <p className="py-16 text-center text-[13px] text-muted">{dict.news.empty}</p>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {items.map((item) => (
+                <article
+                  key={item.id}
+                  className="group flex flex-col border border-line bg-white transition-colors hover:border-steel-300"
+                >
+                  <Link href={`/news/${item.slug}`} className="block overflow-hidden">
+                    <div className="aspect-[4/3] bg-ink-900">
+                      {item.imageUrl && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={item.imageUrl}
+                          alt=""
+                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                        />
+                      )}
+                    </div>
+                  </Link>
+                  <div className="flex flex-1 flex-col p-5">
+                    <time
+                      dateTime={new Date(item.publishedAt).toISOString()}
+                      className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-brand-600"
+                    >
                       {formatDate(item.publishedAt)}
                     </time>
+                    <h2 className="display mt-2 text-[1.1rem] leading-snug text-ink-900">
+                      <Link href={`/news/${item.slug}`} className="hover:text-brand-700">
+                        {localized(locale, item.title, item.titleKo)}
+                      </Link>
+                    </h2>
+                    <p className="mt-2 line-clamp-3 flex-1 text-[12.5px] leading-relaxed text-muted">
+                      {localized(locale, item.excerpt, item.excerptKo)}
+                    </p>
+                    <Link
+                      href={`/news/${item.slug}`}
+                      className="mt-4 inline-flex items-center gap-1.5 text-[11.5px] font-medium text-brand-700 hover:text-brand-800"
+                    >
+                      {dict.common.readMore}
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
                   </div>
-                  <h2 className="mt-3 text-[15px] font-semibold leading-snug text-ink-900 transition-colors group-hover:text-brand-700">
-                    {item.title}
-                  </h2>
-                  <p className="mt-2 line-clamp-3 flex-1 text-[13px] leading-relaxed text-muted">
-                    {item.excerpt}
-                  </p>
-                  <span className="mt-4 inline-flex items-center gap-1.5 text-[12px] font-medium text-ink-700">
-                    Read article
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
+                </article>
+              ))}
+            </div>
+          )}
 
-          {items.length === 0 && (
-            <p className="py-20 text-center text-sm text-muted">
-              No news has been published yet.
-            </p>
+          {pages > 1 && (
+            <div className="mt-10 flex items-center justify-center gap-1.5">
+              {Array.from({ length: pages }).map((_, index) => {
+                const number = index + 1;
+                return (
+                  <Link
+                    key={number}
+                    href={hrefFor(number)}
+                    aria-current={number === page ? "page" : undefined}
+                    className={cn(
+                      "grid h-9 w-9 place-items-center border text-[12.5px]",
+                      number === page
+                        ? "border-ink-900 bg-ink-900 text-white"
+                        : "border-line bg-white text-muted hover:border-steel-300",
+                    )}
+                  >
+                    {number}
+                  </Link>
+                );
+              })}
+              {page < pages && (
+                <Link
+                  href={hrefFor(page + 1)}
+                  className="ml-1 inline-flex items-center gap-1 border border-line bg-white px-4 py-2 text-[12px] text-ink-700 hover:border-steel-300"
+                >
+                  {dict.common.next}
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
+              )}
+            </div>
           )}
         </div>
       </section>

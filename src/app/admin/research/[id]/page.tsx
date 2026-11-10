@@ -64,11 +64,17 @@ export default async function ResearchEditorPage({
             <Field label="Title" required>
               <Input name="title" defaultValue={area?.title ?? ""} required />
             </Field>
+            <Field label="Title (Korean)">
+              <Input name="titleKo" defaultValue={area?.titleKo ?? ""} />
+            </Field>
             <Field label="URL slug" hint="Leave empty to generate from the title.">
               <Input name="slug" defaultValue={area?.slug ?? ""} />
             </Field>
             <Field label="Tagline">
               <Input name="tagline" defaultValue={area?.tagline ?? ""} />
+            </Field>
+            <Field label="Tagline (Korean)">
+              <Input name="taglineKo" defaultValue={area?.taglineKo ?? ""} />
             </Field>
             <Field label="Icon">
               <Select name="icon" defaultValue={area?.icon ?? "cpu"}>
@@ -85,13 +91,34 @@ export default async function ResearchEditorPage({
             <Field label="Keywords" hint="Comma separated.">
               <Input name="keywords" defaultValue={(area?.keywords ?? []).join(", ")} />
             </Field>
+            <Field label="Published date" hint="Shown on the research index; newest first.">
+              <Input type="date" name="publishedAt" defaultValue={area?.publishedAt ?? ""} />
+            </Field>
           </div>
 
           <Field label="Card summary" hint="Shown on the home page and research index.">
             <Textarea name="summary" defaultValue={area?.summary ?? ""} />
           </Field>
+          <Field label="Card summary (Korean)">
+            <Textarea name="summaryKo" defaultValue={area?.summaryKo ?? ""} />
+          </Field>
           <Field label="Full overview" hint="Separate paragraphs with a blank line.">
             <Textarea name="overview" defaultValue={area?.overview ?? ""} className="min-h-[200px]" />
+          </Field>
+          <Field label="Full overview (Korean)" hint="Separate paragraphs with a blank line.">
+            <Textarea name="overviewKo" defaultValue={area?.overviewKo ?? ""} className="min-h-[200px]" />
+          </Field>
+          <Field
+            label="Figures & results"
+            hint="One figure per line: image URL | caption."
+          >
+            <Textarea
+              name="figures"
+              defaultValue={(area?.figures ?? [])
+                .map((figure) => `${figure.imageUrl} | ${figure.caption}`)
+                .join("\n")}
+              className="min-h-[120px] font-mono text-[12px]"
+            />
           </Field>
         </Card>
 
@@ -107,6 +134,13 @@ export default async function ResearchEditorPage({
                 className="min-h-[180px]"
               />
             </Field>
+            <Field label="Objectives (Korean)" hint="One per line.">
+              <Textarea
+                name="objectivesKo"
+                defaultValue={(area?.objectivesKo ?? []).join("\n")}
+                className="min-h-[180px]"
+              />
+            </Field>
           </Card>
 
           <Card className="space-y-4 p-5">
@@ -117,6 +151,13 @@ export default async function ResearchEditorPage({
               <Textarea
                 name="methodologies"
                 defaultValue={(area?.methodologies ?? []).join("\n")}
+                className="min-h-[180px]"
+              />
+            </Field>
+            <Field label="Methodologies (Korean)" hint="One per line.">
+              <Textarea
+                name="methodologiesKo"
+                defaultValue={(area?.methodologiesKo ?? []).join("\n")}
                 className="min-h-[180px]"
               />
             </Field>

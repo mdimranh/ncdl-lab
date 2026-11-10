@@ -66,6 +66,9 @@ export default async function MemberEditorPage({
                 <Field label="Full name" required>
                   <Input name="name" defaultValue={member?.name ?? ""} required />
                 </Field>
+                <Field label="Full name (Korean)" hint="Shown when the site is read in Korean.">
+                  <Input name="nameKo" defaultValue={member?.nameKo ?? ""} />
+                </Field>
                 <Field label="URL slug" hint="Leave empty to generate from the name.">
                   <Input name="slug" defaultValue={member?.slug ?? ""} placeholder="ayesha-rahman" />
                 </Field>
@@ -83,6 +86,9 @@ export default async function MemberEditorPage({
                     defaultValue={member?.designation ?? ""}
                     placeholder="PhD Candidate · Spiking Accelerators"
                   />
+                </Field>
+                <Field label="Designation (Korean)">
+                  <Input name="designationKo" defaultValue={member?.designationKo ?? ""} />
                 </Field>
                 <Field label="Email">
                   <Input type="email" name="email" defaultValue={member?.email ?? ""} />
@@ -106,10 +112,20 @@ export default async function MemberEditorPage({
               <Field label="Biography" hint="Separate paragraphs with a blank line.">
                 <Textarea name="bio" defaultValue={member?.bio ?? ""} className="min-h-[160px]" />
               </Field>
+              <Field label="Biography (Korean)" hint="Leave empty to fall back to English.">
+                <Textarea name="bioKo" defaultValue={member?.bioKo ?? ""} className="min-h-[160px]" />
+              </Field>
               <Field label="Research interests" hint="One per line.">
                 <Textarea
                   name="interests"
                   defaultValue={(member?.interests ?? []).join("\n")}
+                  className="min-h-[96px]"
+                />
+              </Field>
+              <Field label="Research interests (Korean)" hint="One per line.">
+                <Textarea
+                  name="interestsKo"
+                  defaultValue={(member?.interestsKo ?? []).join("\n")}
                   className="min-h-[96px]"
                 />
               </Field>
@@ -128,6 +144,9 @@ export default async function MemberEditorPage({
                   defaultValue={member?.alumniPosition ?? ""}
                   placeholder="Postdoctoral Researcher, ETH Zürich"
                 />
+              </Field>
+              <Field label="Alumni position (Korean)">
+                <Input name="alumniPositionKo" defaultValue={member?.alumniPositionKo ?? ""} />
               </Field>
             </Card>
           </div>

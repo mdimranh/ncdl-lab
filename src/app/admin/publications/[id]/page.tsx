@@ -70,12 +70,20 @@ export default async function PublicationEditorPage({
             <Input name="title" defaultValue={paper?.title ?? ""} required />
           </Field>
 
+          <Field label="Title (Korean)" hint="Shown when the site is read in Korean.">
+            <Input name="titleKo" defaultValue={paper?.titleKo ?? ""} />
+          </Field>
+
           <Field label="Authors" required hint="Comma separated, as they appear in the paper.">
             <Input name="authors" defaultValue={paper?.authors ?? ""} required />
           </Field>
 
           <Field label="Venue / journal" hint="For chip records, use the fabrication detail line.">
             <Input name="venue" defaultValue={paper?.venue ?? ""} />
+          </Field>
+
+          <Field label="Venue / journal (Korean)">
+            <Input name="venueKo" defaultValue={paper?.venueKo ?? ""} />
           </Field>
 
           <div className="grid gap-4 sm:grid-cols-3">
@@ -121,6 +129,17 @@ export default async function PublicationEditorPage({
 
           <Field label="Abstract">
             <Textarea name="abstract" defaultValue={paper?.abstract ?? ""} className="min-h-[120px]" />
+          </Field>
+
+          <Field label="Abstract (Korean)" hint="Leave empty to fall back to English.">
+            <Textarea name="abstractKo" defaultValue={paper?.abstractKo ?? ""} className="min-h-[120px]" />
+          </Field>
+
+          <Field
+            label="Certificate / thumbnail image"
+            hint="Image URL. Used by the certificate gallery on the publications page."
+          >
+            <Input name="imageUrl" defaultValue={paper?.imageUrl ?? ""} placeholder="/images/lab/die.svg" />
           </Field>
         </Card>
 

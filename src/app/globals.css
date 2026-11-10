@@ -1,35 +1,50 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink-950: #040a15;
-  --color-ink-900: #071223;
-  --color-ink-800: #0c1b30;
-  --color-ink-700: #14263d;
-  --color-ink-600: #1f3550;
-  --color-ink-500: #334a66;
+  /* Navy — header, footer, headings */
+  --color-ink-950: #0d1729;
+  --color-ink-900: #14213d;
+  --color-ink-800: #1b2b4d;
+  --color-ink-700: #24365c;
+  --color-ink-600: #33486f;
+  --color-ink-500: #4a5f85;
 
-  --color-brand-50: #eafbfa;
-  --color-brand-100: #cbf5f2;
-  --color-brand-200: #99eae6;
-  --color-brand-300: #5cd9d6;
-  --color-brand-400: #2cc7c4;
-  --color-brand-500: #12a8a6;
-  --color-brand-600: #0b8785;
-  --color-brand-700: #0d6c6b;
-  --color-brand-800: #0f5656;
-  --color-brand-900: #103f40;
+  /* Copper — buttons and highlights */
+  --color-brand-50: #fdf6ec;
+  --color-brand-100: #f9e8ce;
+  --color-brand-200: #f0cd9b;
+  --color-brand-300: #e2ab66;
+  --color-brand-400: #d18f3f;
+  --color-brand-500: #c47f2c;
+  --color-brand-600: #a6681f;
+  --color-brand-700: #855216;
+  --color-brand-800: #6a4113;
+  --color-brand-900: #4f300e;
 
-  --color-surface: #f5f7fa;
-  --color-surface-2: #eef2f7;
-  --color-line: #e1e7ef;
-  --color-line-strong: #cbd5e1;
-  --color-muted: #5d6b7f;
+  /* Steel blue — links and tags */
+  --color-steel-50: #eef4fa;
+  --color-steel-100: #dce9f5;
+  --color-steel-200: #b9d3ea;
+  --color-steel-300: #8ab4da;
+  --color-steel-400: #5a90c4;
+  --color-steel-500: #2e5e8c;
+  --color-steel-600: #274f76;
+  --color-steel-700: #20405f;
+
+  /* Light grey — section backgrounds */
+  --color-surface: #f3f5f9;
+  --color-surface-2: #e9edf4;
+  --color-line: #dde3ec;
+  --color-line-strong: #c5cfdd;
+  --color-muted: #5b6678;
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Noto Sans KR", var(--font-noto-sans), ui-sans-serif, system-ui,
+    sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
-  --font-display: var(--font-space-grotesk), var(--font-geist-sans), sans-serif;
+  --font-display: var(--font-noto-serif), "Noto Serif", Georgia, serif;
+  --font-serif: var(--font-noto-serif), "Noto Serif", Georgia, serif;
 }
 
 @layer base {
@@ -47,7 +62,7 @@
   }
 
   ::selection {
-    background-color: var(--color-brand-300);
+    background-color: var(--color-brand-200);
     color: var(--color-ink-950);
   }
 
@@ -61,7 +76,7 @@
 
 .wrap {
   width: 100%;
-  max-width: 82rem;
+  max-width: 78rem;
   margin-inline: auto;
   padding-inline: 1.5rem;
 }
@@ -73,43 +88,30 @@
 }
 
 .eyebrow {
-  font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 
 .display {
   font-family: var(--font-display);
-  letter-spacing: -0.035em;
-  line-height: 1.02;
-  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  font-weight: 600;
 }
 
-.hairline {
-  border-top: 1px solid var(--color-line);
+.rule {
+  height: 2px;
+  width: 2.75rem;
+  background-color: var(--color-brand-500);
 }
 
-/* Technical grid used behind dark hero sections. */
 .grid-tech {
   background-image:
-    linear-gradient(to right, rgba(148, 197, 214, 0.09) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(148, 197, 214, 0.09) 1px, transparent 1px);
-  background-size: 56px 56px;
-}
-
-.grid-tech-light {
-  background-image:
-    linear-gradient(to right, rgba(12, 27, 48, 0.055) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(12, 27, 48, 0.055) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-
-.radial-glow {
-  background:
-    radial-gradient(60% 60% at 18% 12%, rgba(44, 199, 196, 0.16) 0%, transparent 60%),
-    radial-gradient(50% 50% at 88% 78%, rgba(59, 130, 246, 0.14) 0%, transparent 62%);
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
 }
 
 /* --------------------------------- motion -------------------------------- */
@@ -117,7 +119,7 @@
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -135,7 +137,7 @@
 }
 
 .animate-rise {
-  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: rise 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-fade {
@@ -154,8 +156,8 @@
 
 /* Long-form article body (news detail, research overview). */
 .article-body p {
-  margin-bottom: 1.1rem;
-  line-height: 1.8;
+  margin-bottom: 1.15rem;
+  line-height: 1.85;
   color: var(--color-ink-700);
 }
 
@@ -165,35 +167,9 @@
 
 .article-body h3 {
   font-family: var(--font-display);
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   font-weight: 600;
   color: var(--color-ink-900);
-  margin-top: 1.75rem;
+  margin-top: 1.9rem;
   margin-bottom: 0.6rem;
-}
-
-.article-body ul {
-  list-style: none;
-  margin-bottom: 1.1rem;
-  display: grid;
-  gap: 0.6rem;
-}
-
-.article-body ul li {
-  position: relative;
-  padding-left: 1.35rem;
-  line-height: 1.7;
-  color: var(--color-ink-700);
-}
-
-.article-body ul li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.62rem;
-  width: 6px;
-  height: 6px;
-  border-radius: 1px;
-  background: var(--color-brand-500);
-  transform: rotate(45deg);
 }

@@ -57,11 +57,17 @@ export default async function NewsEditorPage({
               <Field label="Headline" required>
                 <Input name="title" defaultValue={article?.title ?? ""} required />
               </Field>
+              <Field label="Headline (Korean)">
+                <Input name="titleKo" defaultValue={article?.titleKo ?? ""} />
+              </Field>
               <Field label="URL slug" hint="Leave empty to generate from the headline.">
                 <Input name="slug" defaultValue={article?.slug ?? ""} />
               </Field>
               <Field label="Excerpt" hint="One or two sentences for cards and search results.">
                 <Textarea name="excerpt" defaultValue={article?.excerpt ?? ""} />
+              </Field>
+              <Field label="Excerpt (Korean)">
+                <Textarea name="excerptKo" defaultValue={article?.excerptKo ?? ""} />
               </Field>
               <Field
                 label="Article content"
@@ -70,6 +76,16 @@ export default async function NewsEditorPage({
                 <Textarea
                   name="content"
                   defaultValue={article?.content ?? ""}
+                  className="min-h-[320px] font-mono text-[12.5px]"
+                />
+              </Field>
+              <Field
+                label="Article content (Korean)"
+                hint="Separate paragraphs with a blank line. Leave empty to fall back to English."
+              >
+                <Textarea
+                  name="contentKo"
+                  defaultValue={article?.contentKo ?? ""}
                   className="min-h-[320px] font-mono text-[12.5px]"
                 />
               </Field>
@@ -116,6 +132,16 @@ export default async function NewsEditorPage({
               </Field>
               <Field label="…or image URL">
                 <Input name="imageUrl" defaultValue={article?.imageUrl ?? ""} />
+              </Field>
+              <Field
+                label="Photo gallery"
+                hint="One image URL per line. Shown beside the article."
+              >
+                <Textarea
+                  name="images"
+                  defaultValue={(article?.images ?? []).join("\n")}
+                  className="min-h-[100px] font-mono text-[12px]"
+                />
               </Field>
             </Card>
           </div>
