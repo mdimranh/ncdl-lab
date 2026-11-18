@@ -52,12 +52,20 @@ const en = {
   members: {
     title: "Members",
     intro:
-      "Four groups make the laboratory: faculty, doctoral and master's researchers, alumni, and the institutions we work with.",
-    tabs: {
-      professor: "Professors",
-      phdMasters: "PhD & Masters",
+      "Five groups make the laboratory: faculty, doctoral researchers, master's students, alumni, and the institutions we work with.",
+    groups: {
+      professor: "Professor",
+      phd: "PhD",
+      masters: "Master's",
       alumni: "Alumni",
       collaborations: "Collaborations",
+    },
+    groupNotes: {
+      professor: "Faculty who lead the laboratory's research programmes.",
+      phd: "Doctoral researchers designing, taping out and testing our chips.",
+      masters: "Master's students working across the four research areas.",
+      alumni: "Former members of the laboratory and where they are now.",
+      collaborations: "Institutions and teams we work with on shared research.",
     },
     profile: {
       position: "Position",
@@ -74,6 +82,7 @@ const en = {
       interests: "Research interests",
     },
     empty: "No members are listed in this group yet.",
+    collaborationsEmpty: "No partner institutions are listed yet.",
     collaborateTitle: "Work with us",
     collaborateBody:
       "We welcome joint proposals, student exchanges and shared fabrication runs.",
@@ -198,12 +207,20 @@ const ko: typeof en = {
   members: {
     title: "구성원",
     intro:
-      "교수진, 박사 및 석사 연구원, 동문, 그리고 함께 연구하는 기관으로 구성됩니다.",
-    tabs: {
-      professor: "교수진",
-      phdMasters: "석·박사 과정",
+      "교수진, 박사 과정, 석사 과정, 동문, 그리고 함께 연구하는 기관으로 구성됩니다.",
+    groups: {
+      professor: "교수",
+      phd: "박사 과정",
+      masters: "석사 과정",
       alumni: "동문",
       collaborations: "협력 기관",
+    },
+    groupNotes: {
+      professor: "연구실의 연구 과제를 이끄는 교수진입니다.",
+      phd: "칩을 설계하고 제작·검증하는 박사 과정 연구원입니다.",
+      masters: "네 개의 연구 분야에서 연구하는 석사 과정 학생입니다.",
+      alumni: "연구실을 떠난 동문과 그들의 현재 소속입니다.",
+      collaborations: "공동 연구를 진행하는 기관과 연구팀입니다.",
     },
     profile: {
       position: "직위",
@@ -220,6 +237,7 @@ const ko: typeof en = {
       interests: "연구 관심 분야",
     },
     empty: "아직 등록된 구성원이 없습니다.",
+    collaborationsEmpty: "아직 등록된 협력 기관이 없습니다.",
     collaborateTitle: "함께 연구하기",
     collaborateBody:
       "공동 연구 제안, 학생 교류, 공동 제작을 환영합니다.",

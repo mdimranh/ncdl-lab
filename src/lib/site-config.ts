@@ -12,6 +12,22 @@ export const navItems = [
   { label: "Contact", href: "/contact" },
 ];
 
+export const memberGroups = [
+  "professor",
+  "phd",
+  "masters",
+  "alumni",
+  "collaborations",
+] as const;
+
+export type MemberGroup = (typeof memberGroups)[number];
+
+export const defaultMemberGroup: MemberGroup = "professor";
+
+export function isMemberGroup(value: string | null | undefined): value is MemberGroup {
+  return memberGroups.includes(value as MemberGroup);
+}
+
 export const publicationTypeLabels: Record<string, string> = {
   journal: "Journal",
   conference: "Conference",

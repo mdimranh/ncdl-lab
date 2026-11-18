@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { LogoMark } from "./logo-mark";
 import { cn } from "@/lib/utils";
 import { setLocaleAction } from "@/lib/locale-actions";
 import { localeLabels, type Dictionary, type Locale } from "@/lib/i18n";
+import { defaultMemberGroup, isMemberGroup, memberGroups } from "@/lib/site-config";
 
 export function SiteHeader({
   shortName,
@@ -19,7 +20,17 @@ export function SiteHeader({
   dict: Dictionary;
 }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const search = searchParams?.toString() ?? "";
   const [open, setOpen] = useState(false);
+  const [membersMenuOpen, setMembersMenuOpen] = useState(false);
+  const [mobileMembersOpen, setMobileMembersOpen] = useState(false);
+
+  useEffect(() => {
+    setMembersMenuOpen(false);
+    setMobileMembersOpen(false);
+    setOpen(false);
+  }, [pathname, search]);
 
   const navItems = [
     { label: dict.nav.home, href: "/" },
@@ -29,6 +40,14 @@ export function SiteHeader({
     { label: dict.nav.news, href: "/news" },
     { label: dict.nav.contact, href: "/contact" },
   ];
+
+  const memberGroupItems = memberGroups.map((key) => ({
+    key,
+    label: dict.members.groups[key],
+  }));
+
+  const groupParam = searchParams?.get("group") ?? null;
+  const activeGroup = isMemberGroup(groupParam) ? groupParam : defaultMemberGroup;
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -51,23 +70,95 @@ export function SiteHeader({
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "relative px-3 py-2 text-[13.5px] font-medium transition-colors",
-                isActive(item.href)
-                  ? "text-white"
-                  : "text-white/60 hover:text-white",
-              )}
-            >
-              {item.label}
-              {isActive(item.href) && (
-                <span className="absolute inset-x-3 -bottom-[1px] h-[2px] bg-brand-400" />
-              )}
-            </Link>
-          ))}
+          {navItems.map((item) =>
+            item.href === "/members" ? (
+              <div
+                key={item.href}
+                className="relative"
+                onMouseEnter={() => setMembersMenuOpen(true)}
+                onMouseLeave={() => setMembersMenuOpen(false)}
+              >
+                <Link
+                  href={item.href}
+                  onFocus={() => setMembersMenuOpen(true)}
+                  aria-haspopup="true"
+                  aria-expanded={membersMenuOpen}
+                  className={cn(
+                    "relative flex items-center gap-1.5 px-3 py-2 text-[13.5px] font-medium transition-colors",
+                    isActive(item.href)
+                      ? "text-white"
+                      : "text-white/60 hover:text-white",
+                  )}
+                >
+                  {item.label}
+                  <ChevronDown
+                    className={cn(
+                      "h-3.5 w-3.5 transition-transform duration-200",
+                      membersMenuOpen && "rotate-180",
+                    )}
+                  />
+                  {isActive(item.href) && (
+                    <span className="absolute inset-x-3 -bottom-[1px] h-[2px] bg-brand-400" />
+                  )}
+                </Link>
+
+                <div
+                  className={cn(
+                    "absolute left-0 top-full pt-2 transition-all duration-150",
+                    membersMenuOpen
+                      ? "visible translate-y-0 opacity-100"
+                      : "invisible -translate-y-1 opacity-0",
+                  )}
+                >
+                  <div
+                    role="menu"
+                    aria-label={item.label}
+                    className="w-56 border border-white/10 bg-ink-950 p-1.5 shadow-2xl"
+                  >
+                    {memberGroupItems.map((group) => {
+                      const selected =
+                        isActive("/members") && activeGroup === group.key;
+                      return (
+                        <Link
+                          key={group.key}
+                          href={`/members?group=${group.key}`}
+                          role="menuitem"
+                          aria-current={selected ? "page" : undefined}
+                          className={cn(
+                            "flex items-center justify-between px-3 py-2 text-[13px] transition-colors",
+                            selected
+                              ? "bg-white/10 text-white"
+                              : "text-white/65 hover:bg-white/5 hover:text-white",
+                          )}
+                        >
+                          {group.label}
+                          {selected && (
+                            <span className="h-1.5 w-1.5 rounded-full bg-brand-400" />
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "relative px-3 py-2 text-[13.5px] font-medium transition-colors",
+                  isActive(item.href)
+                    ? "text-white"
+                    : "text-white/60 hover:text-white",
+                )}
+              >
+                {item.label}
+                {isActive(item.href) && (
+                  <span className="absolute inset-x-3 -bottom-[1px] h-[2px] bg-brand-400" />
+                )}
+              </Link>
+            ),
+          )}
         </nav>
 
         <div className="flex items-center gap-3">
@@ -106,19 +197,76 @@ export function SiteHeader({
       {open && (
         <div className="border-t border-white/10 bg-ink-900 md:hidden">
           <nav className="wrap flex flex-col py-2" aria-label="Mobile">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className={cn(
-                  "border-b border-white/5 px-1 py-3 text-sm font-medium last:border-0",
-                  isActive(item.href) ? "text-brand-300" : "text-white/70",
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) =>
+              item.href === "/members" ? (
+                <div key={item.href} className="border-b border-white/5">
+                  <div className="flex items-center justify-between">
+                    <Link
+                      href={item.href}
+                      onClick={() => setOpen(false)}
+                      className={cn(
+                        "flex-1 px-1 py-3 text-sm font-medium",
+                        isActive(item.href) ? "text-brand-300" : "text-white/70",
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => setMobileMembersOpen((value) => !value)}
+                      aria-expanded={mobileMembersOpen}
+                      aria-label={dict.nav.members}
+                      className="grid h-9 w-9 place-items-center text-white/60"
+                    >
+                      <ChevronDown
+                        className={cn(
+                          "h-4 w-4 transition-transform",
+                          mobileMembersOpen && "rotate-180",
+                        )}
+                      />
+                    </button>
+                  </div>
+
+                  {mobileMembersOpen && (
+                    <div className="pb-2">
+                      {memberGroupItems.map((group) => {
+                        const selected =
+                          isActive("/members") && activeGroup === group.key;
+                        return (
+                          <Link
+                            key={group.key}
+                            href={`/members?group=${group.key}`}
+                            onClick={() => setOpen(false)}
+                            aria-current={selected ? "page" : undefined}
+                            className={cn(
+                              "flex items-center justify-between px-4 py-2 text-[13px]",
+                              selected ? "text-brand-300" : "text-white/60",
+                            )}
+                          >
+                            {group.label}
+                            {selected && (
+                              <span className="h-1 w-1 rounded-full bg-brand-400" />
+                            )}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    "border-b border-white/5 px-1 py-3 text-sm font-medium last:border-0",
+                    isActive(item.href) ? "text-brand-300" : "text-white/70",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              ),
+            )}
           </nav>
         </div>
       )}

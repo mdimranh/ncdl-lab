@@ -5,10 +5,15 @@ import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { collaborations, members } from "@/db/schema";
 import { MemberAvatar } from "@/components/site/member-avatar";
-import { TabGroup } from "@/components/site/tab-group";
 import { Eyebrow, Tag } from "@/components/site/section";
-import { getDictionary, localized, type Locale } from "@/lib/i18n";
+import {
+  getDictionary,
+  localized,
+  type Dictionary,
+  type Locale,
+} from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+import { defaultMemberGroup, isMemberGroup } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Members",
@@ -93,9 +98,80 @@ function MemberCards({
   );
 }
 
-export default async function MembersPage() {
-  const [locale, people, partners] = await Promise.all([
+function Collaborations({
+  partners,
+  dict,
+}: {
+  partners: (typeof collaborations.$inferSelect)[];
+  dict: Dictionary;
+}) {
+  if (partners.length === 0) {
+    return (
+      <p className="border border-dashed border-line-strong px-6 py-14 text-center text-[13px] text-muted">
+        {dict.members.collaborationsEmpty}
+      </p>
+    );
+  }
+
+  return (
+    <div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {partners.map((partner) => (
+          <article key={partner.id} className="border border-line bg-white p-6">
+            <div className="flex items-start justify-between gap-3">
+              <h3 className="font-display text-[16px] font-semibold leading-snug text-ink-900">
+                {partner.institution}
+              </h3>
+              {partner.country && <Tag tone="steel">{partner.country}</Tag>}
+            </div>
+            <p className="mt-3 text-[12.5px] leading-relaxed text-muted">
+              {partner.description}
+            </p>
+            {partner.websiteUrl && (
+              <a
+                href={partner.websiteUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="mt-4 inline-flex items-center gap-1.5 text-[11.5px] font-medium text-steel-600 hover:text-steel-700"
+              >
+                <Globe className="h-3.5 w-3.5" />
+                {dict.common.seeMore}
+                <ArrowUpRight className="h-3 w-3" />
+              </a>
+            )}
+          </article>
+        ))}
+      </div>
+
+      <div className="mt-8 flex flex-col items-start justify-between gap-4 border border-line bg-surface p-6 sm:flex-row sm:items-center">
+        <div>
+          <p className="font-display text-[16px] text-ink-900">
+            {dict.members.collaborateTitle}
+          </p>
+          <p className="mt-1.5 max-w-xl text-[12.5px] leading-relaxed text-muted">
+            {dict.members.collaborateBody}
+          </p>
+        </div>
+        <Link
+          href="/contact"
+          className="inline-flex shrink-0 items-center gap-2 bg-ink-900 px-5 py-2.5 text-[12.5px] font-medium text-white hover:bg-ink-800"
+        >
+          <Mail className="h-4 w-4" />
+          {dict.common.contact}
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+export default async function MembersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ group?: string }>;
+}) {
+  const [locale, params, people, partners] = await Promise.all([
     getLocale(),
+    searchParams,
     db
       .select()
       .from(members)
@@ -105,88 +181,17 @@ export default async function MembersPage() {
   ]);
   const dict = getDictionary(locale);
 
-  const professors = people.filter((person) => person.category === "professor");
-  const students = people.filter(
-    (person) => person.category === "phd" || person.category === "masters",
-  );
-  const alumni = people.filter((person) => person.category === "alumni");
+  const group = isMemberGroup(params.group) ? params.group : defaultMemberGroup;
 
+  const groupMembers = {
+    professor: people.filter((person) => person.category === "professor"),
+    phd: people.filter((person) => person.category === "phd"),
+    masters: people.filter((person) => person.category === "masters"),
+    alumni: people.filter((person) => person.category === "alumni"),
+  };
+
+  const count = group === "collaborations" ? partners.length : groupMembers[group].length;
   const cardLabels = { contact: dict.common.contact, seeMore: dict.common.seeMore };
-
-  const tabItems = [
-    {
-      key: "professor",
-      label: dict.members.tabs.professor,
-      count: professors.length,
-      content: <MemberCards people={professors} labels={cardLabels} locale={locale} />,
-    },
-    {
-      key: "phd-masters",
-      label: dict.members.tabs.phdMasters,
-      count: students.length,
-      content: <MemberCards people={students} labels={cardLabels} locale={locale} />,
-    },
-    {
-      key: "alumni",
-      label: dict.members.tabs.alumni,
-      count: alumni.length,
-      content: <MemberCards people={alumni} labels={cardLabels} locale={locale} />,
-    },
-    {
-      key: "collaborations",
-      label: dict.members.tabs.collaborations,
-      count: partners.length,
-      content: (
-        <div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {partners.map((partner) => (
-              <article key={partner.id} className="border border-line bg-white p-6">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="font-display text-[16px] font-semibold leading-snug text-ink-900">
-                    {partner.institution}
-                  </h3>
-                  {partner.country && <Tag tone="steel">{partner.country}</Tag>}
-                </div>
-                <p className="mt-3 text-[12.5px] leading-relaxed text-muted">
-                  {partner.description}
-                </p>
-                {partner.websiteUrl && (
-                  <a
-                    href={partner.websiteUrl}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="mt-4 inline-flex items-center gap-1.5 text-[11.5px] font-medium text-steel-600 hover:text-steel-700"
-                  >
-                    <Globe className="h-3.5 w-3.5" />
-                    {dict.common.seeMore}
-                    <ArrowUpRight className="h-3 w-3" />
-                  </a>
-                )}
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-8 flex flex-col items-start justify-between gap-4 border border-line bg-surface p-6 sm:flex-row sm:items-center">
-            <div>
-              <p className="font-display text-[16px] text-ink-900">
-                {dict.members.collaborateTitle}
-              </p>
-              <p className="mt-1.5 max-w-xl text-[12.5px] leading-relaxed text-muted">
-                {dict.members.collaborateBody}
-              </p>
-            </div>
-            <Link
-              href="/contact"
-              className="inline-flex shrink-0 items-center gap-2 bg-ink-900 px-5 py-2.5 text-[12.5px] font-medium text-white hover:bg-ink-800"
-            >
-              <Mail className="h-4 w-4" />
-              {dict.common.contact}
-            </Link>
-          </div>
-        </div>
-      ),
-    },
-  ];
 
   return (
     <>
@@ -204,7 +209,38 @@ export default async function MembersPage() {
 
       <section className="bg-white">
         <div className="wrap py-10 lg:py-14">
-          <TabGroup items={tabItems} />
+          <div className="flex flex-col gap-4 border-b border-line pb-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <div className="flex items-baseline gap-3">
+                <h2 className="display text-[1.65rem] text-ink-900">
+                  {dict.members.groups[group]}
+                </h2>
+                <span className="border border-line px-2 py-0.5 font-mono text-[10.5px] text-muted">
+                  {count}
+                </span>
+              </div>
+              <p className="mt-2 max-w-xl text-[13px] leading-relaxed text-muted">
+                {dict.members.groupNotes[group]}
+              </p>
+            </div>
+            <span className="hidden h-[2px] w-11 shrink-0 bg-brand-500 sm:block" />
+          </div>
+
+          <div className="pt-8">
+            {group === "collaborations" ? (
+              <Collaborations partners={partners} dict={dict} />
+            ) : groupMembers[group].length === 0 ? (
+              <p className="border border-dashed border-line-strong px-6 py-14 text-center text-[13px] text-muted">
+                {dict.members.empty}
+              </p>
+            ) : (
+              <MemberCards
+                people={groupMembers[group]}
+                labels={cardLabels}
+                locale={locale}
+              />
+            )}
+          </div>
         </div>
       </section>
     </>
