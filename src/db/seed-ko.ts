@@ -105,13 +105,6 @@ type MemberKorean = {
 };
 
 export const memberKorean: Record<string, MemberKorean> = {
-  "ayesha-rahman": {
-    nameKo: "아예샤 라만",
-    designationKo: "교수 · NCDL 소장",
-    bioKo:
-      "아예샤 라만은 NCDL을 이끌며 전자·전기공학과 교수로 재직하고 있습니다. 소자 물리와 컴퓨터 아키텍처의 경계에서 연구하며, 특히 마이크로와트 영역에서 동작하는 스파이킹 가속기에 집중합니다. 지금까지 일곱 개의 테스트 칩을 테이프아웃했고, 열두 명의 박사 과정 학생을 지도하며, 대학원 아날로그 집적회로 설계 과목을 가르칩니다.\n\n학계로 돌아오기 전에는 임플란트 의료기기용 데이터 변환기를 설계하며 산업계에서 4년을 보냈고, 이 경험은 지금도 '시뮬레이션이 아닌 측정'을 고집하는 연구실 문화의 바탕이 되고 있습니다.",
-    interestsKo: ["뉴로모픽 컴퓨팅", "혼성 신호 VLSI", "저전력 SoC", "멤리스터 소자"],
-  },
   "markus-lindqvist": {
     nameKo: "마르쿠스 린드크비스트",
     designationKo: "교수 · RF 및 아날로그 IC 설계",

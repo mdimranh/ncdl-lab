@@ -42,6 +42,27 @@ export default async function MemberEditorPage({
     .map((entry) => [entry.degree, entry.institution, entry.year].filter(Boolean).join(" | "))
     .join("\n");
 
+  const experienceValue = (member?.experience ?? [])
+    .map((entry) =>
+      [entry.from, entry.to, entry.organization, entry.position].filter(Boolean).join(" | "),
+    )
+    .join("\n");
+
+  const patentsValue = (member?.patents ?? [])
+    .map((entry) => [entry.title, entry.status, entry.number, entry.date].filter(Boolean).join(" | "))
+    .join("\n");
+
+  const projectsValue = (member?.memberProjects ?? [])
+    .map((entry) =>
+      [
+        `Period: ${entry.period}`,
+        `Title: ${entry.title}`,
+        `Summary: ${entry.summary}`,
+        `Relevance: ${entry.relevance}`,
+      ].join("\n"),
+    )
+    .join("\n\n");
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -96,6 +117,15 @@ export default async function MemberEditorPage({
                 <Field label="Phone">
                   <Input name="phone" defaultValue={member?.phone ?? ""} />
                 </Field>
+                <Field label="Mobile">
+                  <Input name="mobile" defaultValue={member?.mobile ?? ""} />
+                </Field>
+                <Field label="Office address">
+                  <Input name="officeAddress" defaultValue={member?.officeAddress ?? ""} />
+                </Field>
+                <Field label="Home address" hint="Only shown when filled in.">
+                  <Input name="homeAddress" defaultValue={member?.homeAddress ?? ""} />
+                </Field>
                 <Field label="Joined year">
                   <Input type="number" name="joinedYear" defaultValue={member?.joinedYear ?? ""} min={1990} max={2100} />
                 </Field>
@@ -134,6 +164,32 @@ export default async function MemberEditorPage({
                 hint="One entry per line: Degree | Institution | Year"
               >
                 <Textarea name="education" defaultValue={educationValue} className="min-h-[96px]" />
+              </Field>
+              <Field
+                label="Professional experience"
+                hint="One entry per line: From | To | Institution / Organization | Position"
+              >
+                <Textarea
+                  name="experience"
+                  defaultValue={experienceValue}
+                  className="min-h-[120px]"
+                />
+              </Field>
+              <Field
+                label="Patents"
+                hint="One entry per line: Title | Status | Application / Registration No. | Date"
+              >
+                <Textarea name="patents" defaultValue={patentsValue} className="min-h-[120px]" />
+              </Field>
+              <Field
+                label="Research projects"
+                hint="Separate projects with a blank line; each uses Period, Title, Summary and Relevance lines."
+              >
+                <Textarea
+                  name="memberProjects"
+                  defaultValue={projectsValue}
+                  className="min-h-[160px]"
+                />
               </Field>
               <Field
                 label="Alumni position"

@@ -15,6 +15,9 @@ import {
   researchAreas,
   siteSettings,
   type EducationEntry,
+  type ExperienceEntry,
+  type MemberProjectEntry,
+  type PatentEntry,
 } from "@/db/schema";
 import { requireAdmin, requireUser } from "@/lib/auth";
 import { bool, int, optional, parseLines, slugify, str } from "@/lib/utils";
@@ -32,6 +35,27 @@ function fail(target: string, message: string): never {
 
 function refreshPublic(paths: string[]) {
   for (const path of paths) revalidatePath(path);
+}
+
+/** Parse "Field: value" blocks separated by blank lines into member projects. */
+function parseProjectBlocks(raw: string): MemberProjectEntry[] {
+  return raw
+    .split(/\n\s*\n/)
+    .map((block) => {
+      const fields: Record<string, string> = {};
+      for (const line of block.split("\n")) {
+        const [key, ...rest] = line.split(":");
+        if (!key || rest.length === 0) continue;
+        fields[key.trim().toLowerCase()] = rest.join(":").trim();
+      }
+      return {
+        period: fields.period ?? "",
+        title: fields.title ?? "",
+        summary: fields.summary ?? "",
+        relevance: fields.relevance ?? "",
+      };
+    })
+    .filter((entry) => entry.title.length > 0);
 }
 
 async function resolveImage(
@@ -69,6 +93,34 @@ export async function saveMemberAction(formData: FormData): Promise<void> {
     })
     .filter((entry) => entry.degree.length > 0);
 
+  const experience: ExperienceEntry[] = parseLines(formData.get("experience"))
+    .map((line) => {
+      const [from, to, organization, position] = line
+        .split("|")
+        .map((part) => part.trim());
+      return {
+        from: from ?? "",
+        to: to ?? "",
+        organization: organization ?? "",
+        position: position ?? "",
+      };
+    })
+    .filter((entry) => entry.organization.length > 0);
+
+  const patents: PatentEntry[] = parseLines(formData.get("patents"))
+    .map((line) => {
+      const [title, status, number, date] = line.split("|").map((part) => part.trim());
+      return {
+        title: title ?? "",
+        status: status ?? "",
+        number: number ?? "",
+        date: date ?? "",
+      };
+    })
+    .filter((entry) => entry.title.length > 0);
+
+  const memberProjects = parseProjectBlocks(str(formData.get("memberProjects")));
+
   const values = {
     name,
     nameKo: optional(formData.get("nameKo")),
@@ -88,6 +140,12 @@ export async function saveMemberAction(formData: FormData): Promise<void> {
     interests: parseLines(formData.get("interests")),
     interestsKo: parseLines(formData.get("interestsKo")),
     education,
+    experience,
+    patents,
+    memberProjects,
+    mobile: optional(formData.get("mobile")),
+    officeAddress: optional(formData.get("officeAddress")),
+    homeAddress: optional(formData.get("homeAddress")),
     websiteUrl: optional(formData.get("websiteUrl")),
     scholarUrl: optional(formData.get("scholarUrl")),
     linkedinUrl: optional(formData.get("linkedinUrl")),

@@ -63,6 +63,27 @@ export type EducationEntry = {
   year: string;
 };
 
+export type ExperienceEntry = {
+  from: string;
+  to: string;
+  organization: string;
+  position: string;
+};
+
+export type PatentEntry = {
+  title: string;
+  status: string;
+  number: string;
+  date: string;
+};
+
+export type MemberProjectEntry = {
+  period: string;
+  title: string;
+  summary: string;
+  relevance: string;
+};
+
 export type FigureEntry = {
   imageUrl: string;
   caption: string;
@@ -89,6 +110,18 @@ export const members = pgTable(
       .$type<EducationEntry[]>()
       .notNull()
       .default([]),
+    experience: jsonb("experience")
+      .$type<ExperienceEntry[]>()
+      .notNull()
+      .default([]),
+    patents: jsonb("patents").$type<PatentEntry[]>().notNull().default([]),
+    memberProjects: jsonb("member_projects")
+      .$type<MemberProjectEntry[]>()
+      .notNull()
+      .default([]),
+    mobile: text("mobile"),
+    officeAddress: text("office_address"),
+    homeAddress: text("home_address"),
     websiteUrl: text("website_url"),
     scholarUrl: text("scholar_url"),
     linkedinUrl: text("linkedin_url"),

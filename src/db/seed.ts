@@ -262,27 +262,177 @@ async function main() {
 
   await db.insert(members).values([
     {
-      slug: "ayesha-rahman",
-      name: "Ayesha Rahman",
+      slug: "song-han-jung",
+      name: "Song Han Jung",
       category: "professor",
-      designation: "Professor & Director, NCDL",
-      email: "ayesha.rahman@ncdl-lab.org",
-      phone: "+880 2 5555 0182",
-      bio: "Ayesha Rahman leads NCDL and holds a chair in the Department of Electrical & Electronic Engineering. Her work sits at the boundary of device physics and computer architecture, with a focus on spiking accelerators that can operate in the microwatt regime. She has taped out seven test chips, supervises twelve doctoral students, and teaches the graduate sequence on analog integrated circuit design.\n\nBefore returning to academia she spent four years in industry designing data converters for implantable medical devices, an experience that still shapes the lab's insistence on measured, not simulated, results.",
+      designation: "Professor, Department of Nano Convergence Engineering",
+      email: "hisong@inje.ac.kr",
+      phone: "055-320-3873",
+      mobile: "010-7778-0202",
+      officeAddress: "(621-749) 197 Inje-79, Gimhae, Gyeongnam, Korea",
+      homeAddress:
+        "(46526) 402, Bldg. 111, Kolon Haneulchae, Hwamyeong New City-19, 70, Buk-gu, Busan",
+      bio: "I aspire to become a researcher and educator who designs the future through the convergence of technology and education.",
       interests: [
-        "Neuromorphic computing",
-        "Mixed-signal VLSI",
-        "Low-power SoCs",
-        "Memristive devices",
+        "Semiconductor devices",
+        "Nano-converged systems",
+        "Electronic circuit design",
+        "Technology transfer",
+        "University-industry collaboration",
       ],
       education: [
-        { degree: "PhD, Electrical Engineering", institution: "ETH Zürich", year: "2013" },
-        { degree: "MSc, Microelectronics", institution: "TU Delft", year: "2008" },
-        { degree: "BSc, Electrical & Electronic Engineering", institution: "BUET", year: "2006" },
+        {
+          degree: "B.S., Electronic Engineering",
+          institution: "Hanyang University",
+          year: "1982.03 – 1986.02",
+        },
+        {
+          degree: "M.S., Electronic Engineering",
+          institution: "Hanyang University",
+          year: "1986.03 – 1988.02",
+        },
+        {
+          degree: "Ph.D., Electronic Engineering",
+          institution: "Hanyang University",
+          year: "1995.03 – 2000.08",
+        },
       ],
-      scholarUrl: "https://scholar.google.com/",
-      orcidUrl: "https://orcid.org/",
-      joinedYear: 2018,
+      experience: [
+        {
+          from: "1988.01",
+          to: "1994.02",
+          organization: "GoldStar Electronics (now SK Yasuko)",
+          position: "Senior Researcher",
+        },
+        {
+          from: "1994.03",
+          to: "2004.02",
+          organization: "ChungChaong College",
+          position: "Associate Professor",
+        },
+        {
+          from: "2004.03",
+          to: "Present",
+          organization: "Inje University, Dept. of Nano Convergence Engineering",
+          position: "Professor",
+        },
+        {
+          from: "2006.11",
+          to: "2008.10",
+          organization: "Inje Univ. Technology Transfer Center",
+          position: "Director",
+        },
+        {
+          from: "2006.11",
+          to: "2008.10",
+          organization: "Inje Univ. Industry-Academia Cooperation Foundation",
+          position: "Deputy Director",
+        },
+        {
+          from: "2010.03",
+          to: "2011.02",
+          organization: "University of Texas at Dallas (USA)",
+          position: "Visiting Professor",
+        },
+        {
+          from: "2013.11",
+          to: "2014.08",
+          organization: "Inje University Career Development Center",
+          position: "Deputy Dean",
+        },
+        {
+          from: "2013.09",
+          to: "2023.07",
+          organization: "Inje Univ. Industry-Academia Cooperation Foundation",
+          position: "Director",
+        },
+      ],
+      patents: [
+        {
+          title: "Retinal Image Processing Device and Method Thereof",
+          status: "Registered",
+          number: "10-2581638",
+          date: "2022.09",
+        },
+        {
+          title:
+            "Method for Manufacturing Gadolinium-Doped Hafnium Dioxide 3x3 Crosbar Memristor Array",
+          status: "Registered",
+          number: "10-2533893",
+          date: "2023.05",
+        },
+        {
+          title: "High-Efficiency Antenna for Contact Lenses",
+          status: "Registered",
+          number: "10-2533891",
+          date: "2023.05",
+        },
+        {
+          title: "Memristor Device and Manufacturing Method Thereof",
+          status: "Registered",
+          number: "10-2395031",
+          date: "2022.05",
+        },
+        {
+          title: "Retinal Neural Circuit",
+          status: "Registered",
+          number: "10-2144351",
+          date: "2020.08",
+        },
+        {
+          title: "Ultra-Wideband Low Noise Amplifier for 6G-Based Wireless System",
+          status: "Applied",
+          number: "10-2024-0082321",
+          date: "2024.06",
+        },
+        {
+          title:
+            "Trigger-Type Neuron Circuit Based on EMFET Technology and Neuromorphic System Including the Same",
+          status: "Applied",
+          number: "10-2024-0047399",
+          date: "2024.04",
+        },
+        {
+          title: "EMFET-Based STDP Learning Circuit for Synaptic Weight Update",
+          status: "Applied",
+          number: "10-2024-0447371",
+          date: "2024.04",
+        },
+        {
+          title:
+            "Artificial Bridge Circuit Device Between Biological Neurons for Paralysis Disability",
+          status: "Applied",
+          number: "10-2024-0001903",
+          date: "2024.02",
+        },
+        {
+          title:
+            "Radiation-Hardened Schmidt Trigger-Based Latch Circuit Using Ferroelectric CNT FET",
+          status: "Applied",
+          number: "10-2023-0029616",
+          date: "2023.03",
+        },
+      ],
+      memberProjects: [
+        {
+          period: "Basic Research (2015–18)",
+          title: "Ultra-Low Voltage Neuron Circuit Based on Hodgkin-Huxley Model",
+          summary:
+            "Semiconductor implementation of the neuron Hodgkin-Huxley model; use of memristors as synaptic devices; multiple SCI papers and patent registrations.",
+          relevance:
+            "Implementation and characterization of ultra-low voltage integrated circuits based on the Hodgkin-Huxley neural mechanism.",
+        },
+        {
+          period: "Basic Research (2019–21)",
+          title:
+            "Core Technology Study of Spatio-Temporal Chaos Neural Circuit for Brain-Mimicking Computing",
+          summary:
+            "Circuit design research considering nonlinear chaos dynamics and synaptic plasticity found in the nervous system; use of memristors as synaptic devices; multiple SCI papers and patents.",
+          relevance:
+            "Modeling of artificial synapses and neural networks based on nonlinear chaos attractor characteristics of neural cells; semiconductor integrated circuit implementation.",
+        },
+      ],
+      joinedYear: 2004,
       displayOrder: 1,
     },
     {

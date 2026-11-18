@@ -132,7 +132,7 @@ export default async function MemberPage({
           <div>
             {paragraphs.length > 0 && (
               <>
-                <Eyebrow>{dict.members.profile.position}</Eyebrow>
+                <Eyebrow>{dict.members.profile.about}</Eyebrow>
                 <div className="article-body mt-4">
                   {paragraphs.map((paragraph) => (
                     <p key={paragraph.slice(0, 40)}>{paragraph}</p>
@@ -214,6 +214,28 @@ export default async function MemberPage({
                 <dt className="text-muted">{dict.members.profile.officePhone}</dt>
                 <dd className="text-right text-ink-800">{member.phone ?? "—"}</dd>
               </div>
+              {member.mobile && (
+                <div className="flex items-start justify-between gap-4 py-3">
+                  <dt className="text-muted">{dict.members.profile.mobile}</dt>
+                  <dd className="text-right text-ink-800">{member.mobile}</dd>
+                </div>
+              )}
+              {member.officeAddress && (
+                <div className="flex items-start justify-between gap-4 py-3">
+                  <dt className="text-muted">{dict.members.profile.officeAddress}</dt>
+                  <dd className="max-w-[60%] text-right text-ink-800">
+                    {member.officeAddress}
+                  </dd>
+                </div>
+              )}
+              {member.homeAddress && (
+                <div className="flex items-start justify-between gap-4 py-3">
+                  <dt className="text-muted">{dict.members.profile.homeAddress}</dt>
+                  <dd className="max-w-[60%] text-right text-ink-800">
+                    {member.homeAddress}
+                  </dd>
+                </div>
+              )}
               {member.joinedYear && (
                 <div className="flex items-center justify-between gap-4 py-3">
                   <dt className="text-muted">{dict.members.profile.joined}</dt>
@@ -255,6 +277,130 @@ export default async function MemberPage({
           </aside>
         </div>
       </section>
+
+      {(member.experience.length > 0 ||
+        member.patents.length > 0 ||
+        member.memberProjects.length > 0) && (
+        <section className="border-t border-line bg-surface">
+          <div className="wrap space-y-12 py-12 lg:py-16">
+            {member.experience.length > 0 && (
+              <div>
+                <h2 className="eyebrow text-brand-600">
+                  {dict.members.profile.experience}
+                </h2>
+                <div className="mt-4 overflow-x-auto border border-line bg-white">
+                  <table className="w-full min-w-[640px] text-left text-[12.5px]">
+                    <thead>
+                      <tr className="border-b border-line bg-surface text-[10.5px] uppercase tracking-[0.12em] text-muted">
+                        <th className="px-4 py-2.5 font-medium">
+                          {dict.members.profile.period}
+                        </th>
+                        <th className="px-4 py-2.5 font-medium">
+                          {dict.members.profile.organization}
+                        </th>
+                        <th className="px-4 py-2.5 font-medium">
+                          {dict.members.profile.role}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-line">
+                      {member.experience.map((entry, index) => (
+                        <tr key={`${entry.organization}-${index}`}>
+                          <td className="whitespace-nowrap px-4 py-2.5 font-mono text-[11px] text-steel-600">
+                            {entry.from} – {entry.to}
+                          </td>
+                          <td className="px-4 py-2.5 text-ink-900">{entry.organization}</td>
+                          <td className="px-4 py-2.5 text-muted">{entry.position}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {member.patents.length > 0 && (
+              <div>
+                <h2 className="eyebrow text-brand-600">
+                  {dict.members.profile.patents}
+                </h2>
+                <div className="mt-4 overflow-x-auto border border-line bg-white">
+                  <table className="w-full min-w-[720px] text-left text-[12.5px]">
+                    <thead>
+                      <tr className="border-b border-line bg-surface text-[10.5px] uppercase tracking-[0.12em] text-muted">
+                        <th className="w-10 px-4 py-2.5 font-medium">#</th>
+                        <th className="px-4 py-2.5 font-medium">
+                          {dict.members.profile.patentTitle}
+                        </th>
+                        <th className="px-4 py-2.5 font-medium">
+                          {dict.members.profile.patentType}
+                        </th>
+                        <th className="px-4 py-2.5 font-medium">
+                          {dict.members.profile.patentNumber}
+                        </th>
+                        <th className="px-4 py-2.5 font-medium">
+                          {dict.members.profile.date}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-line">
+                      {member.patents.map((patent, index) => (
+                        <tr key={`${patent.title}-${index}`}>
+                          <td className="px-4 py-2.5 font-mono text-[11px] text-muted">
+                            {index + 1}
+                          </td>
+                          <td className="px-4 py-2.5 text-ink-900">{patent.title}</td>
+                          <td className="px-4 py-2.5 text-muted">{patent.status}</td>
+                          <td className="px-4 py-2.5 font-mono text-[11px] text-steel-600">
+                            {patent.number}
+                          </td>
+                          <td className="whitespace-nowrap px-4 py-2.5 text-muted">
+                            {patent.date}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {member.memberProjects.length > 0 && (
+              <div>
+                <h2 className="eyebrow text-brand-600">
+                  {dict.members.profile.projects}
+                </h2>
+                <div className="mt-4 grid gap-4 lg:grid-cols-2">
+                  {member.memberProjects.map((project, index) => (
+                    <article
+                      key={`${project.title}-${index}`}
+                      className="border border-line bg-white p-5"
+                    >
+                      <p className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-brand-600">
+                        {project.period}
+                      </p>
+                      <h3 className="mt-2 font-display text-[15px] font-semibold leading-snug text-ink-900">
+                        {project.title}
+                      </h3>
+                      <p className="mt-2 text-[12.5px] leading-relaxed text-muted">
+                        {project.summary}
+                      </p>
+                      {project.relevance && (
+                        <p className="mt-3 border-t border-line pt-3 text-[12px] leading-relaxed text-ink-700">
+                          <span className="font-medium text-ink-900">
+                            {dict.members.profile.projectRelevance}:{" "}
+                          </span>
+                          {project.relevance}
+                        </p>
+                      )}
+                    </article>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
     </>
   );
 }

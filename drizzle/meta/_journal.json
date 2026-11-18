@@ -36,6 +36,20 @@
       "when": 1794328844294,
       "tag": "0004_furry_flatman",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1795017340836,
+      "tag": "0005_white_piledriver",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1795017657801,
+      "tag": "0006_orange_spyke",
+      "breakpoints": true
     }
   ]
 }

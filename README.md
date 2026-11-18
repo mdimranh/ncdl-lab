@@ -64,7 +64,7 @@ Sign in at `/login`. Sessions last seven days and are signed with `SESSION_SECRE
 | Route | Purpose |
 | --- | --- |
 | `/admin` | Dashboard with counts and recent activity |
-| `/admin/members` | Add, edit, hide or delete members (photo upload, education, links) |
+| `/admin/members` | Add, edit, hide or delete members (photo upload, education, experience, patents, projects, links) |
 | `/admin/research` | Research areas with objectives, methodologies, keywords, icon |
 | `/admin/projects` | Ongoing/completed projects, funding, partners, featured flag |
 | `/admin/publications` | Journal, conference, chip, workshop and certificate records |
