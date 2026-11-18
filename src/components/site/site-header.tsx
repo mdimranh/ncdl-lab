@@ -46,8 +46,14 @@ export function SiteHeader({
     label: dict.members.groups[key],
   }));
 
+  // Only the directory page has an active group; profile pages are not part of one.
+  const onMembersList = pathname === "/members";
   const groupParam = searchParams?.get("group") ?? null;
-  const activeGroup = isMemberGroup(groupParam) ? groupParam : defaultMemberGroup;
+  const activeGroup = onMembersList
+    ? isMemberGroup(groupParam)
+      ? groupParam
+      : defaultMemberGroup
+    : null;
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -116,8 +122,7 @@ export function SiteHeader({
                     className="w-56 border border-white/10 bg-ink-950 p-1.5 shadow-2xl"
                   >
                     {memberGroupItems.map((group) => {
-                      const selected =
-                        isActive("/members") && activeGroup === group.key;
+                      const selected = activeGroup === group.key;
                       return (
                         <Link
                           key={group.key}
@@ -230,8 +235,7 @@ export function SiteHeader({
                   {mobileMembersOpen && (
                     <div className="pb-2">
                       {memberGroupItems.map((group) => {
-                        const selected =
-                          isActive("/members") && activeGroup === group.key;
+                        const selected = activeGroup === group.key;
                         return (
                           <Link
                             key={group.key}
