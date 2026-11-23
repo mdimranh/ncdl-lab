@@ -1,24 +1,23 @@
-import Link from "next/link";
-import type { Metadata } from "next";
-import type { ReactNode } from "react";
-import { notFound } from "next/navigation";
+import { MemberAvatar } from "@/components/site/member-avatar";
+import { Tag } from "@/components/site/section";
+import { db } from "@/db";
+import { members, publications } from "@/db/schema";
+import { getSettings, memberCategoryLabels } from "@/lib/content";
+import { getDictionary, localized, localizedList } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
+import { cn } from "@/lib/utils";
+import { and, desc, eq, like } from "drizzle-orm";
 import {
   ArrowLeft,
   ArrowUpRight,
   Globe,
   Mail,
-  MapPin,
-  Phone,
+  MapPin
 } from "lucide-react";
-import { and, desc, eq, like } from "drizzle-orm";
-import { db } from "@/db";
-import { members, publications } from "@/db/schema";
-import { MemberAvatar } from "@/components/site/member-avatar";
-import { Tag } from "@/components/site/section";
-import { getSettings, memberCategoryLabels } from "@/lib/content";
-import { getDictionary, localized, localizedList } from "@/lib/i18n";
-import { getLocale } from "@/lib/locale";
-import { cn } from "@/lib/utils";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import type { ReactNode } from "react";
 
 async function getMember(slug: string) {
   const [member] = await db
@@ -169,15 +168,6 @@ export default async function MemberPage({
                   >
                     <Mail className="h-4 w-4" />
                     {dict.members.profile.contact}
-                  </a>
-                )}
-                {member.phone && (
-                  <a
-                    href={`tel:${member.phone.replace(/\s/g, "")}`}
-                    className="inline-flex items-center gap-2 border border-line bg-white px-4 py-2.5 text-[12.5px] font-medium text-ink-800 transition-colors hover:border-steel-300"
-                  >
-                    <Phone className="h-4 w-4 text-steel-500" />
-                    {member.phone}
                   </a>
                 )}
               </div>
@@ -405,19 +395,6 @@ export default async function MemberPage({
                       {member.email}
                     </a>
                   </Fact>
-                )}
-                {member.phone && (
-                  <Fact label={dict.members.profile.officePhone}>
-                    <a
-                      href={`tel:${member.phone.replace(/\s/g, "")}`}
-                      className="hover:text-steel-600"
-                    >
-                      {member.phone}
-                    </a>
-                  </Fact>
-                )}
-                {member.mobile && (
-                  <Fact label={dict.members.profile.mobile}>{member.mobile}</Fact>
                 )}
                 {member.officeAddress && (
                   <Fact label={dict.members.profile.officeAddress}>

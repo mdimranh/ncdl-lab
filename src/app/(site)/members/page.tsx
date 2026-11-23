@@ -1,11 +1,7 @@
-import Link from "next/link";
-import type { Metadata } from "next";
-import { ArrowUpRight, Globe, Mail, Phone } from "lucide-react";
-import { asc, eq } from "drizzle-orm";
-import { db } from "@/db";
-import { collaborations, members } from "@/db/schema";
 import { MemberAvatar } from "@/components/site/member-avatar";
 import { Eyebrow, Tag } from "@/components/site/section";
+import { db } from "@/db";
+import { collaborations, members } from "@/db/schema";
 import {
   getDictionary,
   localized,
@@ -14,6 +10,10 @@ import {
 } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { defaultMemberGroup, isMemberGroup } from "@/lib/site-config";
+import { asc, eq } from "drizzle-orm";
+import { ArrowUpRight, Globe, Mail } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Members",
@@ -64,15 +64,6 @@ function MemberCards({
               >
                 <Mail className="h-3.5 w-3.5 text-steel-500" />
                 <span className="truncate">{person.email}</span>
-              </a>
-            )}
-            {person.phone && (
-              <a
-                href={`tel:${person.phone.replace(/\s/g, "")}`}
-                className="flex items-center gap-1.5 hover:text-steel-600"
-              >
-                <Phone className="h-3.5 w-3.5 text-steel-500" />
-                {person.phone}
               </a>
             )}
           </div>
