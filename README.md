@@ -31,6 +31,7 @@ The `.env` file already points at the local database:
 ```
 DATABASE_URL=postgresql://postgres:mdimranh@localhost:5432/ncdl
 SESSION_SECRET=<change-me-in-production>
+UPSTASH_BLOB_TOKEN=<upstash-blob-bucket-token>
 ```
 
 ### Database
@@ -106,9 +107,11 @@ src/
 
 ## Notes
 
-- **Uploads** are written to `public/uploads/` and served as static files. That works for
-  `next dev`; on a production server, uploaded files must live on persistent storage
-  (or be replaced with object storage) because `public/` is snapshotted at build time.
+- **Uploads** go to [Upstash Blob](https://upstash.com/blob) through `UPSTASH_BLOB_TOKEN`
+  and are stored under the `uploads/` prefix; the saved member/gallery/news URL is the
+  bucket's public CDN URL. The bucket must be **public**, otherwise uploads are rejected
+  (a private bucket returns no URL). Keep the token server-side — it can read and write the
+  whole bucket.
 - **Images** shipped with the seed (`public/images/lab/*.svg`) are designed placeholders,
   not photographs. Replace them from `/admin/gallery`.
 - **Auth** is deliberately lightweight for a single-lab CMS. Add rate limiting, password

@@ -6,6 +6,7 @@ import { signOutAction } from "@/lib/auth-actions";
 import { getSettings } from "@/lib/content";
 import { LogoMark } from "@/components/site/logo-mark";
 import { AdminNav } from "@/components/admin/admin-nav";
+import { SubmitButton } from "@/components/admin/submit-button";
 
 export const dynamic = "force-dynamic";
 
@@ -48,13 +49,12 @@ export default async function AdminLayout({ children }: { children: ReactNode })
               <ArrowUpRight className="h-3 w-3" />
             </Link>
             <form action={signOutAction}>
-              <button
-                type="submit"
-                className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-[11.5px] text-white/45 hover:text-white"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                Sign out
-              </button>
+              <SubmitButton
+                icon={<LogOut className="h-3.5 w-3.5" />}
+                label="Sign out"
+                pendingLabel="Signing out…"
+                className="rounded-lg px-2 py-1.5 text-[11.5px] text-white/45 hover:text-white"
+              />
             </form>
           </div>
         </div>
@@ -83,13 +83,12 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                 <ArrowUpRight className="h-3 w-3" />
               </Link>
               <form action={signOutAction}>
-                <button
-                  type="submit"
-                  className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11.5px] font-medium text-muted hover:text-ink-900"
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                  Sign out
-                </button>
+                <SubmitButton
+                  icon={<LogOut className="h-3.5 w-3.5" />}
+                  label="Sign out"
+                  pendingLabel="Signing out…"
+                  className="rounded-lg px-2.5 py-1.5 text-[11.5px] font-medium text-muted hover:text-ink-900"
+                />
               </form>
             </div>
           </div>

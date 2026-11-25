@@ -15,6 +15,7 @@ import {
   Select,
   Textarea,
 } from "@/components/admin/ui";
+import { ImageInput } from "@/components/admin/image-input";
 import { savePublicationAction } from "../../actions";
 
 export default async function PublicationEditorPage({
@@ -135,9 +136,22 @@ export default async function PublicationEditorPage({
             <Textarea name="abstractKo" defaultValue={paper?.abstractKo ?? ""} className="min-h-[120px]" />
           </Field>
 
+          {paper?.imageUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={paper.imageUrl}
+              alt=""
+              className="aspect-[16/9] w-full max-w-sm rounded-lg border border-line object-cover"
+            />
+          )}
+
+          <Field label="Upload certificate / thumbnail" hint="PNG, JPEG, WebP or AVIF up to 5 MB.">
+            <ImageInput name="imageFile" />
+          </Field>
+
           <Field
-            label="Certificate / thumbnail image"
-            hint="Image URL. Used by the certificate gallery on the publications page."
+            label="…or image URL"
+            hint="Used by the certificate gallery on the publications page."
           >
             <Input name="imageUrl" defaultValue={paper?.imageUrl ?? ""} placeholder="/images/lab/die.svg" />
           </Field>

@@ -6,6 +6,7 @@ import { getSession } from "@/lib/auth";
 import { signInAction } from "@/lib/auth-actions";
 import { getSettings } from "@/lib/content";
 import { LogoMark } from "@/components/site/logo-mark";
+import { SubmitButton } from "@/components/admin/submit-button";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -117,12 +118,11 @@ export default async function LoginPage({
               </span>
             </label>
 
-            <button
-              type="submit"
+            <SubmitButton
+              label="Sign in to dashboard"
+              pendingLabel="Signing in…"
               className="w-full rounded-xl bg-ink-950 py-3 text-[13.5px] font-medium text-white transition-colors hover:bg-ink-800"
-            >
-              Sign in to dashboard
-            </button>
+            />
           </form>
 
           <div className="mt-8 rounded-xl border border-line bg-surface p-4">

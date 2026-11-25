@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { ArrowLeft, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SubmitButton } from "@/components/admin/submit-button";
 
 export function PageHeader({
   eyebrow,
@@ -143,12 +144,11 @@ export function FormActions({
 }) {
   return (
     <div className="flex flex-wrap items-center gap-3 border-t border-line pt-5">
-      <button
-        type="submit"
-        className="rounded-lg bg-ink-950 px-5 py-2.5 text-[12.5px] font-medium text-white transition-colors hover:bg-ink-800"
-      >
-        {submitLabel}
-      </button>
+      <SubmitButton
+        label={submitLabel}
+        pendingLabel="Saving…"
+        className="rounded-lg bg-ink-950 px-5 py-2.5 text-[12.5px] font-medium text-white transition-colors hover:bg-ink-800 disabled:hover:bg-ink-950"
+      />
       {cancelHref && (
         <Link
           href={cancelHref}

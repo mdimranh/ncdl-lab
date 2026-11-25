@@ -10,6 +10,7 @@
     "db:seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
+    "@upstash/blob": "^0.0.14",
     "drizzle-orm": "^0.45.4",
     "lucide-react": "^1.68.0",
     "next": "16.4.5",

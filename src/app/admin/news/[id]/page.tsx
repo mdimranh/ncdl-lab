@@ -14,6 +14,7 @@ import {
   PageHeader,
   Textarea,
 } from "@/components/admin/ui";
+import { ImageInput } from "@/components/admin/image-input";
 import { saveNewsAction } from "../../actions";
 
 export default async function NewsEditorPage({
@@ -128,7 +129,7 @@ export default async function NewsEditorPage({
                 />
               )}
               <Field label="Upload image" hint="PNG, JPEG, WebP or AVIF up to 5 MB.">
-                <Input type="file" name="imageFile" accept="image/*" className="py-1.5 text-[11.5px]" />
+                <ImageInput name="imageFile" />
               </Field>
               <Field label="…or image URL">
                 <Input name="imageUrl" defaultValue={article?.imageUrl ?? ""} />

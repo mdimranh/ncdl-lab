@@ -1,18 +1,12 @@
+import Link from "next/link";
 import { asc } from "drizzle-orm";
+import { Pencil } from "lucide-react";
 import { db } from "@/db";
 import { gallery } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth";
 import { DeleteButton } from "@/components/admin/delete-button";
-import {
-  Card,
-  EmptyState,
-  Field,
-  Input,
-  Notice,
-  PageHeader,
-  Textarea,
-} from "@/components/admin/ui";
-import { deleteGalleryAction, saveGalleryAction } from "../actions";
+import { Card, EmptyState, Notice, PageHeader } from "@/components/admin/ui";
+import { deleteGalleryAction } from "../actions";
 
 export default async function AdminGalleryPage({
   searchParams,
@@ -32,93 +26,57 @@ export default async function AdminGalleryPage({
       <PageHeader
         eyebrow="Site"
         title="Gallery & carousel"
-        description="Photos shown in the home page carousel, in display order. Upload new images or reuse an existing path."
+        description="Photos for the home page carousel, shown in the order below."
+        action={{ label: "Add photo", href: "/admin/gallery/new" }}
       />
 
       {params.saved && <Notice tone="success">Photo saved.</Notice>}
       {params.deleted && <Notice tone="success">Photo removed.</Notice>}
       {params.error && <Notice tone="error">{params.error}</Notice>}
 
-      <Card className="p-5">
-        <h2 className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
-          Add a photo
-        </h2>
-        <form action={saveGalleryAction} className="mt-4 grid gap-4 lg:grid-cols-[1.2fr_1fr_1fr]">
-          <div className="space-y-3">
-            <Field label="Title">
-              <Input name="title" placeholder="Die bring-up session" />
-            </Field>
-            <Field label="Caption" hint="Shown over the carousel image.">
-              <Textarea name="caption" className="min-h-[74px]" />
-            </Field>
-          </div>
-
-          <div className="space-y-3">
-            <Field label="Upload image" hint="PNG, JPEG, WebP or AVIF up to 5 MB.">
-              <Input type="file" name="imageFile" accept="image/*" className="py-1.5 text-[11.5px]" />
-            </Field>
-            <Field label="…or image URL">
-              <Input name="imageUrl" placeholder="/images/lab/die.svg" />
-            </Field>
-          </div>
-
-          <div className="space-y-3">
-            <Field label="Display order">
-              <Input type="number" name="displayOrder" defaultValue={rows.length + 1} />
-            </Field>
-            <button
-              type="submit"
-              className="w-full rounded-lg bg-ink-950 px-4 py-2.5 text-[12.5px] font-medium text-white transition-colors hover:bg-ink-800"
-            >
-              Add photo
-            </button>
-          </div>
-        </form>
-      </Card>
-
       {rows.length === 0 ? (
-        <EmptyState title="Gallery is empty" hint="Add photos to enable the home page carousel." />
+        <EmptyState
+          title="Gallery is empty"
+          hint="Add your first photo to enable the home page carousel."
+        />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {rows.map((item) => (
-            <Card key={item.id} className="overflow-hidden">
-              <div className="aspect-[16/9] bg-ink-900">
+            <Card key={item.id} className="flex flex-col overflow-hidden">
+              <div className="relative aspect-[16/9] overflow-hidden bg-ink-900">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={item.imageUrl}
                   alt={item.title}
-                  className="h-full w-full object-cover"
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
+                <span className="absolute left-3 top-3 rounded-full bg-ink-950/70 px-2 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.14em] text-white backdrop-blur">
+                  #{item.displayOrder}
+                </span>
               </div>
-              <form action={saveGalleryAction} className="space-y-3 p-4">
-                <input type="hidden" name="id" value={item.id} />
-                <input type="hidden" name="imageUrl" value={item.imageUrl} />
-                <Field label="Title">
-                  <Input name="title" defaultValue={item.title} />
-                </Field>
-                <Field label="Caption">
-                  <Textarea name="caption" defaultValue={item.caption} className="min-h-[64px]" />
-                </Field>
-                <div className="flex items-end gap-3">
-                  <Field label="Order" className="w-24">
-                    <Input type="number" name="displayOrder" defaultValue={item.displayOrder} />
-                  </Field>
-                  <button
-                    type="submit"
-                    className="rounded-lg border border-line px-3 py-2 text-[11.5px] font-medium text-ink-800 hover:border-brand-300"
-                  >
-                    Update
-                  </button>
-                </div>
-              </form>
-              <div className="flex items-center justify-between border-t border-line px-4 py-2.5">
-                <span className="font-mono text-[10px] text-muted">{item.imageUrl}</span>
+
+              <div className="min-w-0 flex-1 px-4 py-3.5">
+                <p className="truncate text-[12.5px] font-medium text-ink-900">
+                  {item.title || "Untitled photo"}
+                </p>
+                <p className="mt-0.5 line-clamp-2 text-[11.5px] leading-relaxed text-muted">
+                  {item.caption || "No caption"}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 border-t border-line px-4 py-2.5">
                 <DeleteButton
                   action={deleteGalleryAction}
                   id={item.id}
                   label={item.title || "photo"}
-                  compact
                 />
+                <Link
+                  href={`/admin/gallery/${item.id}`}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-ink-950 px-3 py-1.5 text-[11.5px] font-medium text-white transition-colors hover:bg-ink-800"
+                >
+                  <Pencil className="h-3 w-3" />
+                  Edit
+                </Link>
               </div>
             </Card>
           ))}

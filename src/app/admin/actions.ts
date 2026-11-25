@@ -302,6 +302,7 @@ export async function savePublicationAction(formData: FormData): Promise<void> {
   const year = int(formData.get("year"));
   if (!year || year < 1950 || year > 2100) fail(target, "Enter a valid publication year.");
 
+  const imageUrl = await resolveImage(formData, "imageFile", "imageUrl", target);
   const doi = optional(formData.get("doi"));
   const values = {
     title,
@@ -317,7 +318,7 @@ export async function savePublicationAction(formData: FormData): Promise<void> {
     year: year as number,
     doi,
     url: optional(formData.get("url")) ?? (doi ? `https://doi.org/${doi}` : null),
-    imageUrl: optional(formData.get("imageUrl")),
+    imageUrl,
     abstract: optional(formData.get("abstract")),
     abstractKo: optional(formData.get("abstractKo")),
     areaId: int(formData.get("areaId")),
@@ -447,7 +448,7 @@ export async function deletePositionAction(formData: FormData): Promise<void> {
 export async function saveGalleryAction(formData: FormData): Promise<void> {
   await requireAdmin();
   const id = int(formData.get("id"));
-  const target = "/admin/gallery";
+  const target = id ? `/admin/gallery/${id}` : "/admin/gallery/new";
 
   const imageUrl = await resolveImage(formData, "imageFile", "imageUrl", target);
   if (!imageUrl) fail(target, "Upload an image or provide an image URL.");

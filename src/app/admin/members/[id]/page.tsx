@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { members } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth";
 import { MemberAvatar } from "@/components/site/member-avatar";
+import { ImageInput } from "@/components/admin/image-input";
 import {
   Card,
   Checkbox,
@@ -216,10 +217,10 @@ export default async function MemberEditorPage({
                 <MemberAvatar name={member?.name ?? "New member"} photoUrl={member?.photoUrl} />
               </div>
               <Field label="Upload photo" hint="PNG, JPEG, WebP or AVIF up to 5 MB.">
-                <Input type="file" name="photoFile" accept="image/*" className="py-1.5 text-[11.5px]" />
+                <ImageInput name="photoFile" />
               </Field>
               <Field label="…or image URL">
-                <Input name="photoUrl" defaultValue={member?.photoUrl ?? ""} placeholder="/uploads/photo.jpg" />
+                <Input name="photoUrl" defaultValue={member?.photoUrl ?? ""} placeholder="https://…/photo.jpg" />
               </Field>
             </Card>
 
