@@ -1,8 +1,8 @@
-import Link from "next/link";
-import { Mail, MapPin, Phone, Printer } from "lucide-react";
-import { LogoMark } from "./logo-mark";
 import type { SiteSettings } from "@/db/schema";
 import { localized, type Dictionary, type Locale } from "@/lib/i18n";
+import { Mail, MapPin } from "lucide-react";
+import Link from "next/link";
+import { LogoMark } from "./logo-mark";
 
 export function SiteFooter({
   settings,
@@ -87,7 +87,7 @@ export function SiteFooter({
                   {localized(locale, settings.address, settings.addressKo) || "Campus address"}
                 </span>
               </li>
-              {settings.phone && (
+              {/* {settings.phone && (
                 <li className="flex gap-2.5">
                   <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" />
                   <a
@@ -97,7 +97,7 @@ export function SiteFooter({
                     {settings.phone}
                   </a>
                 </li>
-              )}
+              )} */}
               {settings.email && (
                 <li className="flex gap-2.5">
                   <Mail className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" />
@@ -106,12 +106,12 @@ export function SiteFooter({
                   </a>
                 </li>
               )}
-              {settings.fax && (
+              {/* {settings.fax && (
                 <li className="flex gap-2.5">
                   <Printer className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" />
                   <span>{settings.fax}</span>
                 </li>
-              )}
+              )} */}
             </ul>
           </div>
         </div>
