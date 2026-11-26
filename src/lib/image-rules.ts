@@ -1,4 +1,4 @@
-export const IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+export const IMAGE_MAX_BYTES = 15 * 1024 * 1024;
 
 export const IMAGE_EXTENSIONS: Record<string, string> = {
   "image/png": ".png",
@@ -18,7 +18,7 @@ export function imageFileProblem(file: File): string | null {
     return "Unsupported image type. Use PNG, JPEG, WebP, GIF or AVIF.";
   }
   if (file.size > IMAGE_MAX_BYTES) {
-    return "Image is larger than 5 MB. Resize or compress it and try again.";
+    return "Image is larger than 15 MB. Resize or compress it and try again.";
   }
   return null;
 }
